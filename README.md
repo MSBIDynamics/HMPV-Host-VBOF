@@ -617,7 +617,7 @@ This project follows strict coding standards:
 
 ## License
 
-Copyright (c) 2025 [Your Name]. All rights reserved.
+Copyright (c) 2025 Syed Mushahid Hussain. All rights reserved.
 
 1. License Grant
    This source code and associated data are provided solely for **personal review or educational purposes**.
