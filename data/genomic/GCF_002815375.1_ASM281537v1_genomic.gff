@@ -1,0 +1,26 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+#!genome-build ASM281537v1
+#!genome-build-accession NCBI_Assembly:GCF_002815375.1
+##sequence-region NC_039199.1 1 13350
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=162145
+NC_039199.1	RefSeq	region	1	13350	.	+	.	ID=NC_039199.1:1..13350;Dbxref=taxon:162145;gb-acronym=HMPV;gbkey=Src;genome=genomic;isolate=00-1;mol_type=genomic RNA
+NC_039199.1	RefSeq	gene	40	1224	.	+	.	ID=gene-D1Y22_gp1;Dbxref=GeneID:37626968;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding;locus_tag=D1Y22_gp1
+NC_039199.1	RefSeq	CDS	40	1224	.	+	0	ID=cds-YP_009513265.1;Parent=gene-D1Y22_gp1;Dbxref=GenBank:YP_009513265.1,GeneID:37626968;Name=YP_009513265.1;gbkey=CDS;gene=N;locus_tag=D1Y22_gp1;product=nucleoprotein;protein_id=YP_009513265.1
+NC_039199.1	RefSeq	gene	1248	2132	.	+	.	ID=gene-D1Y22_gp2;Dbxref=GeneID:37626964;Name=P;gbkey=Gene;gene=P;gene_biotype=protein_coding;locus_tag=D1Y22_gp2
+NC_039199.1	RefSeq	CDS	1248	2132	.	+	0	ID=cds-YP_009513266.1;Parent=gene-D1Y22_gp2;Dbxref=GenBank:YP_009513266.1,GeneID:37626964;Name=YP_009513266.1;gbkey=CDS;gene=P;locus_tag=D1Y22_gp2;product=phosphoprotein;protein_id=YP_009513266.1
+NC_039199.1	RefSeq	gene	2165	2929	.	+	.	ID=gene-D1Y22_gp3;Dbxref=GeneID:37626965;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding;locus_tag=D1Y22_gp3
+NC_039199.1	RefSeq	CDS	2165	2929	.	+	0	ID=cds-YP_009513267.1;Parent=gene-D1Y22_gp3;Dbxref=GenBank:YP_009513267.1,GeneID:37626965;Name=YP_009513267.1;gbkey=CDS;gene=M;locus_tag=D1Y22_gp3;product=matrix protein;protein_id=YP_009513267.1
+NC_039199.1	RefSeq	gene	3052	4671	.	+	.	ID=gene-D1Y22_gp4;Dbxref=GeneID:37626966;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding;locus_tag=D1Y22_gp4
+NC_039199.1	RefSeq	CDS	3052	4671	.	+	0	ID=cds-YP_009513268.1;Parent=gene-D1Y22_gp4;Dbxref=GenBank:YP_009513268.1,GeneID:37626966;Name=YP_009513268.1;gbkey=CDS;gene=F;locus_tag=D1Y22_gp4;product=fusion protein;protein_id=YP_009513268.1
+NC_039199.1	RefSeq	gene	4737	5463	.	+	.	ID=gene-D1Y22_gp5;Dbxref=GeneID:37626967;Name=M2;gbkey=Gene;gene=M2;gene_biotype=protein_coding;locus_tag=D1Y22_gp5
+NC_039199.1	RefSeq	CDS	4737	5300	.	+	0	ID=cds-YP_009513269.1;Parent=gene-D1Y22_gp5;Dbxref=GenBank:YP_009513269.1,GeneID:37626967;Name=YP_009513269.1;gbkey=CDS;gene=M2;locus_tag=D1Y22_gp5;product=matrix protein 2-1;protein_id=YP_009513269.1
+NC_039199.1	RefSeq	CDS	5248	5463	.	+	0	ID=cds-YP_009513270.1;Parent=gene-D1Y22_gp5;Dbxref=GenBank:YP_009513270.1,GeneID:37626967;Name=YP_009513270.1;gbkey=CDS;gene=M2;locus_tag=D1Y22_gp5;product=matrix protein 2-2;protein_id=YP_009513270.1
+NC_039199.1	RefSeq	gene	5494	6045	.	+	.	ID=gene-D1Y22_gp6;Dbxref=GeneID:37626961;Name=SH;gbkey=Gene;gene=SH;gene_biotype=protein_coding;locus_tag=D1Y22_gp6
+NC_039199.1	RefSeq	CDS	5494	6045	.	+	0	ID=cds-YP_009513271.1;Parent=gene-D1Y22_gp6;Dbxref=GenBank:YP_009513271.1,GeneID:37626961;Name=YP_009513271.1;gbkey=CDS;gene=SH;locus_tag=D1Y22_gp6;product=small hydrophobic protein;protein_id=YP_009513271.1
+NC_039199.1	RefSeq	gene	6247	6957	.	+	.	ID=gene-D1Y22_gp7;Dbxref=GeneID:37626962;Name=G;gbkey=Gene;gene=G;gene_biotype=protein_coding;locus_tag=D1Y22_gp7
+NC_039199.1	RefSeq	CDS	6247	6957	.	+	0	ID=cds-YP_009513272.1;Parent=gene-D1Y22_gp7;Dbxref=GenBank:YP_009513272.1,GeneID:37626962;Name=YP_009513272.1;gbkey=CDS;gene=G;locus_tag=D1Y22_gp7;product=attachment glycoprotein;protein_id=YP_009513272.1
+NC_039199.1	RefSeq	gene	7167	13184	.	+	.	ID=gene-D1Y22_gp8;Dbxref=GeneID:37626963;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding;locus_tag=D1Y22_gp8
+NC_039199.1	RefSeq	CDS	7167	13184	.	+	0	ID=cds-YP_009513273.1;Parent=gene-D1Y22_gp8;Dbxref=GenBank:YP_009513273.1,GeneID:37626963;Name=YP_009513273.1;gbkey=CDS;gene=L;locus_tag=D1Y22_gp8;product=RNA-dependent RNA polymerase;protein_id=YP_009513273.1
+###

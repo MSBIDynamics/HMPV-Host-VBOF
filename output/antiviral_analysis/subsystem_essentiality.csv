@@ -1,0 +1,2 @@
+subsystem,total_reactions,lethal_knockouts,significant_knockouts,avg_flux_reduction,max_flux_reduction,essentiality_score,sample_lethal_reactions
+Unknown,3472,26,0,0.00748847926267314,1.0000000000000207,0.014976958525345621,"H2O transport, lysosomal;N-acetyl-glucosamine lysosomal efflux;DM Asn-X-Ser/Thr(ly)"

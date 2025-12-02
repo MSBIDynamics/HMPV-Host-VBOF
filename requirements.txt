@@ -1,0 +1,30 @@
+# HMPV VBOF and Metabolic Model Construction
+# ==========================================
+# Required Python packages
+
+# Core scientific computing
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+
+# Constraint-based metabolic modeling
+cobra>=0.26.0
+
+# Bioinformatics (optional, for advanced sequence analysis)
+# biopython>=1.79
+
+# Data serialization
+# (json is built-in, but these are useful for complex data)
+
+# Logging and utilities
+# (logging is built-in)
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=3.0.0
+
+# Development tools (optional)
+# black>=22.0.0
+# flake8>=4.0.0
+# mypy>=0.950
+

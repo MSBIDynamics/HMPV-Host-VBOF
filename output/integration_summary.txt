@@ -1,0 +1,41 @@
+
+================================================================================
+HMPV VBOF INTEGRATION SUMMARY
+================================================================================
+
+MODEL INFORMATION:
+------------------
+Model ID: iHsaEC21_CLEAN
+Total Reactions: 3614
+Total Metabolites: 4052
+Total Genes: 4660
+
+VBOF REACTION:
+--------------
+Reaction ID: HMPV_VBOF
+Reaction Name: Human Metapneumovirus Biomass Objective Function
+Subsystem: Viral Replication
+Metabolites in VBOF: 38
+Bounds: [0, 1000]
+
+METABOLITE MAPPING:
+-------------------
+Mapped metabolites: 38
+Unmapped metabolites: 4
+
+Unmapped IDs: glu__L_c, cmpacna_c, gdpfuc_c, udpgalfur_c
+
+VALIDATION:
+-----------
+Valid: True
+Errors: 0
+Warnings: 0
+
+FBA RESULT:
+-----------
+Status: optimal
+Objective Value: 1.2654365695792906
+Feasible: True
+================================================================================
+
+Generated: 2025-12-01 18:20:18
