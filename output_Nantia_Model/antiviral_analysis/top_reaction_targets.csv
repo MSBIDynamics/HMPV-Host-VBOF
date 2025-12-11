@@ -1,0 +1,62 @@
+reaction_id,reaction_name,subsystem,knockout_flux,baseline_flux,flux_ratio,flux_reduction,impact,status,num_genes,gene_ids,gene_names,equation
+GK1,Guanylate kinase (GMP:ATP),Unknown,-2.0198165427535937e-11,8.68247832632316,-2.326313371413784e-12,1.0000000000023264,LETHAL,optimal,1,2987_AT1,GUK1,atp_c + gmp_c <=> adp_c + gdp_c
+FRDPtr,"Lipid, flip-flop intracellular transport",Unknown,-2.371537590225766e-13,8.68247832632316,-2.731406288727311e-14,1.0000000000000273,LETHAL,optimal,0,,,frdp_x <=> frdp_r
+RTOTAL2CRNCPT1,Carnitine fatty-acyl transferase,Unknown,-5.644754227718528e-14,8.68247832632316,-6.501316807903807e-15,1.0000000000000064,LETHAL,optimal,6,1375_AT2;1374_AT1;126129_AT1;1375_AT4;1375_AT3;1375_AT1,CPT1B;CPT1A;CPT1C;CPT1B;CPT1B;CPT1B,Rtotal2coa_c + crn_c --> Rtotal2crn_c + coa_c
+HMGCOAtx,Hydroxymethylglutaryl-CoA reversible peroxisomal transport,Unknown,-4.7854851241411925e-14,8.68247832632316,-5.511658013165166e-15,1.0000000000000056,LETHAL,optimal,0,,,hmgcoa_c <=> hmgcoa_x
+C3STKR2r,C-3 sterol keto reductase (zymosterol),Unknown,-3.3228968899574646e-14,8.68247832632316,-3.827129495829837e-15,1.0000000000000038,LETHAL,optimal,1,3295_AT1,HSD17B4,h_r + nadph_r + zym_int2_r --> nadp_r + zymst_r
+FADH2tru,"FADH2 transporter, endoplasmic reticulum",Unknown,-2.3927425620705963e-14,8.68247832632316,-2.755829006582583e-15,1.0000000000000027,LETHAL,optimal,0,,,fadh2_c --> fadh2_r
+Htx,"H transporter, peroxisome",Unknown,-1.5381916470453835e-14,8.68247832632316,-1.771604361374518e-15,1.0000000000000018,LETHAL,optimal,0,,,h_c <=> h_x
+CO2ter,CO2 endoplasmic reticular transport via diffusion,Unknown,-6.8364073202017045e-15,8.68247832632316,-7.873797161664524e-16,1.0000000000000009,LETHAL,optimal,0,,,co2_c <=> co2_r
+ACGAMPM,Phosphoacetylglucosamine mutase,Unknown,-5.571793144054961e-15,8.68247832632316,-6.417284253002557e-16,1.0000000000000007,LETHAL,optimal,1,5238_AT1,PGM3,acgam6p_c <=> acgam1p_c
+LNS14DMr,Cytochrome P450 lanosterol 14-alpha-demethylase,Unknown,-5.228326159397591e-15,8.68247832632316,-6.021697910315053e-16,1.0000000000000007,LETHAL,optimal,1,1595_AT1,CYP51A1,2.0 h_r + lanost_r + 3.0 nadph_r + 3.0 o2_r --> 44mctr_r + for_r + 4.0 h2o_r + 3.0 nadp_r
+SMS,Sphingomyelin synthase (homo sapiens),Unknown,-5.1028385904843055e-15,8.68247832632316,-5.87716824470928e-16,1.0000000000000007,LETHAL,optimal,1,259230_AT1,SGMS1,crm_hs_c + pchol_hs_c --> dag_hs_c + sphmyln_hs_c
+FADtru,"FAD transporter, endoplasmic reticulum",Unknown,-3.4182036601008523e-15,8.68247832632316,-3.936898580832262e-16,1.0000000000000004,LETHAL,optimal,0,,,fad_r --> fad_c
+UAGDP,UDP-N-acetylglucosamine diphosphorylase,Unknown,-3.4182036601008523e-15,8.68247832632316,-3.936898580832262e-16,1.0000000000000004,LETHAL,optimal,2,6675_AT1;91373_AT1,UAP1;UAP1L1,acgam1p_c + h_c + utp_c --> ppi_c + uacgam_c
+SERPT,Serine C palmitoyltransferase,Unknown,-4.302434761692137e-15,8.68247832632316,-4.955307229098635e-16,1.0000000000000004,LETHAL,optimal,2,10558_AT1;9517_AT1,SPTLC1;SPTLC2,h_c + pmtcoa_c + ser__L_c --> 3dsphgn_c + co2_c + coa_c
+PPItx,"Diphosphate transporter, peroxisome",Unknown,-3.4182036601008523e-15,8.68247832632316,-3.936898580832262e-16,1.0000000000000004,LETHAL,optimal,0,,,ppi_c <=> ppi_x
+NADPtru,"NADP transporter, endoplasmic reticulum",Unknown,-2.115430637631963e-15,8.68247832632316,-2.436436416107706e-16,1.0000000000000002,LETHAL,optimal,0,,,nadp_r --> nadp_c
+DSAT,Dihydrosphingosine N-acyltransferase,Unknown,-2.382305862364086e-15,8.68247832632316,-2.7438085910810915e-16,1.0000000000000002,LETHAL,optimal,0,,,Rtotalcoa_c + sphgn_c --> coa_c + dhcrm_hs_c + h_c
+ADPtx,"ADP transporter, peroxisomal",Unknown,-1.647644725114263e-15,8.68247832632316,-1.897666384169374e-16,1.0000000000000002,LETHAL,optimal,0,,,adp_c <=> adp_x
+PMEVKx,Phosphomevalonate kinase,Unknown,-1.7091018300504261e-15,8.68247832632316,-1.968449290416131e-16,1.0000000000000002,LETHAL,optimal,1,10654_AT1,PMVK,5pmev_x + atp_x --> 5dpmev_x + adp_x
+C4STMO1r,"C-4 sterol methyl oxidase (4,4-dimethylzymosterol)",Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,6307_AT1,MSMO1,44mzym_r + 3.0 h_r + 3.0 nadph_r + 3.0 o2_r --> 4mzym_int1_r + 4.0 h2o_r + 3.0 nadp_r
+GRTTx,Geranyltranstransferase,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,2224_AT1,FDPS,grdp_x + ipdp_x --> frdp_x + ppi_x
+FORtr,"FOR transporter, endoplasmic reticulum",Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,for_c <=> for_r
+PIter,"Phosphate transport, endoplasmic reticulum",Unknown,-8.948417608302495e-16,8.68247832632316,-1.0306294207695367e-16,1.0,LETHAL,optimal,1,2544_AT1,2544_AT1,pi_r <=> pi_c
+CHSTEROLt3,Cholesterol intracellular transport,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,chsterol_c <=> chsterol_m
+LNSTLSr,Lanosterol synthase,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,4047_AT1,LSS,Ssq23epx_r --> lanost_r
+DMATTx,Dimethylallyltranstransferase,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,2224_AT1,FDPS,dmpp_x + ipdp_x --> grdp_x + ppi_x
+NADPtxu,"NADP transport, glyoxysome",Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,nadp_x --> nadp_c
+COAtp,"Coenzyme A transport, peroxisomal",Unknown,-7.948158656457902e-16,8.68247832632316,-9.154251076401792e-17,1.0,LETHAL,optimal,0,,,coa_c <=> coa_x
+CO2tp,CO2 peroxisomal transport,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,co2_c <=> co2_x
+NADPHtxu,"NADPH transport, glyoxysome",Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,nadph_c --> nadph_x
+PItx,"Phosphate transporter, peroxisome",Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,pi_c <=> pi_x
+PPAer,"Inorganic diphosphatase, endoplasmic reticulum",Unknown,-1.0588257772034658e-30,8.68247832632316,-1.2194971728214556e-31,1.0,LETHAL,optimal,3,92579_AT1;57818_AT1;2538_AT1,G6PC3;G6PC2;G6PC,h2o_r + ppi_r --> h_r + 2.0 pi_r
+HMGCOARx,Hydroxymethylglutaryl CoA reductase (ir),Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,3156_AT1,HMGCR,2.0 h_x + hmgcoa_x + 2.0 nadph_x --> coa_x + mev__R_x + 2.0 nadp_x
+O2ter,O2  transport  endoplasmic reticulum,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,0,,,o2_c <=> o2_r
+SQLSr,Squalene synthase,Unknown,0.0,8.68247832632316,0.0,1.0,LETHAL,optimal,1,2222_AT1,FDFT1,2.0 frdp_r + h_r + nadph_r --> nadp_r + 2.0 ppi_r + sql_r
+RTOTAL2CRNt,R group transport into the mitochondria,Unknown,1.5219895832240088e-15,8.68247832632316,1.752943717244542e-16,0.9999999999999998,LETHAL,optimal,1,788_AT1,SLC25A20,Rtotal2crn_c --> Rtotal2crn_m
+PEFLIP,Phosphatidylethanolamine flippase,Unknown,1.7091018300504261e-15,8.68247832632316,1.968449290416131e-16,0.9999999999999998,LETHAL,optimal,2,57194_AT1;10396_AT1,ATP10A;ATP8A1,atp_c + h2o_c + pe_hs_e --> adp_c + h_c + pe_hs_c + pi_c
+SQLEr,Squalene epoxidase  endoplasmic reticular  NADP,Unknown,2.3823099583427404e-15,8.68247832632316,2.7438133086035546e-16,0.9999999999999998,LETHAL,optimal,1,6713_AT1,SQLE,h_r + nadph_r + o2_r + sql_r --> Ssq23epx_r + h2o_r + nadp_r
+RTOTAL2CRNCPT2,R group transport into the mitochondria,Unknown,1.5219895832240088e-15,8.68247832632316,1.752943717244542e-16,0.9999999999999998,LETHAL,optimal,1,1376_AT1,CPT2,Rtotal2crn_m + coa_m --> Rtotal2coa_m + crn_m
+CHSTEROLt2,Cholesterol intracellular transport,Unknown,3.4182036601008523e-15,8.68247832632316,3.936898580832262e-16,0.9999999999999996,LETHAL,optimal,0,,,chsterol_r <=> chsterol_m
+ARTPLM2m,R group to palmitate conversion,Unknown,3.4182036601008523e-15,8.68247832632316,3.936898580832262e-16,0.9999999999999996,LETHAL,optimal,0,,,Rtotal2coa_m <=> pmtcoa_m
+ARTCOAL2,R group coenzyme a ligase,Unknown,5.0098632011056074e-15,8.68247832632316,5.77008431557718e-16,0.9999999999999994,LETHAL,optimal,0,,,Rtotal2_c + coa_c <=> Rtotal2coa_c
+IPDDIx,Isopentenyl-diphosphate D-isomerase,Unknown,4.645520745656229e-15,8.68247832632316,5.350454756186539e-16,0.9999999999999994,LETHAL,optimal,2,3422_AT1;91734_AT1,IDI1;IDI2,ipdp_x <=> dmpp_x
+CRNtim,L carnitine transport out of mitochondria via diffusion,Unknown,5.022728310139832e-15,8.68247832632316,5.7849016391001435e-16,0.9999999999999994,LETHAL,optimal,1,788_AT1,SLC25A20,crn_m --> crn_c
+UMPK5,UMP kinase (dATP),Unknown,1.0254610980302557e-14,8.68247832632316,1.1810695742496787e-15,0.9999999999999988,LETHAL,optimal,1,51727_AT1,CMPK1,datp_c + ump_c <=> dadp_c + udp_c
+MEVK1x,Mevalonate kinase (atp),Unknown,1.1963712810352981e-14,8.68247832632316,1.3779145032912915e-15,0.9999999999999987,LETHAL,optimal,1,4598_AT1,MVK,atp_x + mev__R_x --> 5pmev_x + adp_x + h_x
+O2t,O2 transport  diffusion,Unknown,1.709101830050426e-14,8.68247832632316,1.968449290416131e-15,0.999999999999998,LETHAL,optimal,0,,,o2_e <=> o2_c
+NDPK2,Nucleoside-diphosphate kinase (ATP:UDP),Unknown,2.3060404544135194e-14,8.68247832632316,2.6559702975844653e-15,0.9999999999999973,LETHAL,optimal,7,4830_AT1;4832_AT1;29922_AT2;4831_AT1;4830_AT2;29922_AT1;10201_AT1,NME1;NME3;NME7;NME2;NME1;NME7;NME6,atp_c + udp_c <=> adp_c + utp_c
+IMPD,IMP dehydrogenase,Unknown,2.3927425620705963e-14,8.68247832632316,2.755829006582583e-15,0.9999999999999972,LETHAL,optimal,3,3615_AT1;3614_AT1;3614_AT2,IMPDH2;IMPDH1;IMPDH1,h2o_c + imp_c + nad_c --> h_c + nadh_c + xmp_c
+NADPHtru,"NADPH transporter, endoplasmic reticulum",Unknown,3.056797271378134e-14,8.68247832632316,3.5206506212755743e-15,0.9999999999999964,LETHAL,optimal,0,,,nadph_c --> nadph_r
+ATPtx,"ATP transporter, peroxisomal",Unknown,3.2060269212901574e-14,8.68247832632316,3.69252510722689e-15,0.9999999999999963,LETHAL,optimal,0,,,atp_c <=> atp_x
+3DSPHR,3 Dehydrosphinganine reductase,Unknown,4.164377212264893e-14,8.68247832632316,4.796300152733483e-15,0.9999999999999952,LETHAL,optimal,1,2531_AT1,KDSR,3dsphgn_c + h_c + nadph_c --> nadp_c + sphgn_c
+DPMVDx,Diphosphomevalonate decarboxylase,Unknown,4.61457494113615e-14,8.68247832632316,5.314813084123553e-15,0.9999999999999947,LETHAL,optimal,1,4597_AT1,MVD,5dpmev_x + atp_x --> adp_x + co2_x + ipdp_x + pi_x
+ARTCOAL1,R group coenzyme a ligase,Unknown,6.152766588181534e-14,8.68247832632316,7.086417445498072e-15,0.9999999999999929,LETHAL,optimal,0,,,Rtotal_c + coa_c <=> Rtotalcoa_c
+C14STRr,C-14 sterol reductase,Unknown,1.0596431346312641e-13,8.68247832632316,1.2204385600580012e-14,0.9999999999999878,LETHAL,optimal,1,7108_AT1,TM7SF2,44mctr_r + h_r + nadph_r --> 44mzym_r + nadp_r
+HMGCOAS,Hydroxymethylglutaryl CoA synthase,Unknown,1.2305533176363068e-13,8.68247832632316,1.4172834890996144e-14,0.9999999999999858,LETHAL,optimal,2,3157_AT1;3157_AT2,HMGCS1;HMGCS1,coa_c + h_c + hmgcoa_c <-- aacoa_c + accoa_c + h2o_c
+GMPS2,GMP synthase,Unknown,5.947674368575483e-13,8.68247832632316,6.850203530648135e-14,0.9999999999999315,LETHAL,optimal,1,8833_AT1,GMPS,atp_c + gln__L_c + h2o_c + xmp_c --> amp_c + glu__L_c + gmp_c + 2.0 h_c + ppi_c
+ACGAM6PS,N acetylglucosamine 6 phosphate synthase,Unknown,0.22404383459460717,8.68247832632316,0.025804134047229442,0.9741958659527705,SIGNIFICANT,optimal,1,64841_AT1,GNPNAT1,accoa_c + gam6p_c --> acgam6p_c + coa_c + h_c
+GF6PTA,Glutamine-fructose-6-phosphate transaminase,Unknown,0.8369939481081076,8.68247832632316,0.09640034983681396,0.903599650163186,SIGNIFICANT,optimal,2,9945_AT1;2673_AT1,GFPT2;GFPT1,f6p_c + gln__L_c --> gam6p_c + glu__L_c
+AHCi,Adenosylhomocysteinase,Unknown,0.9642908983227054,8.68247832632316,0.11106171096324079,0.8889382890367592,SIGNIFICANT,optimal,3,10768_AT2;191_AT1;10768_AT1,AHCYL1;AHCY;AHCYL1,ahcys_c + h2o_c <=> adn_c + hcys__L_c
+METAT,Methionine adenosyltransferase,Unknown,0.9642908983227813,8.68247832632316,0.11106171096324952,0.8889382890367505,SIGNIFICANT,optimal,4,27430_AT2;4143_AT1;27430_AT1;4144_AT1,MAT2B;MAT1A;MAT2B;MAT2A,atp_c + h2o_c + met__L_c --> amet_c + pi_c + ppi_c

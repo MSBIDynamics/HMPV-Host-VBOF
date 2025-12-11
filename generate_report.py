@@ -36,6 +36,22 @@ from datetime import datetime
 import json
 import warnings
 
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from src.config import (
+    OUTPUT_DIR,
+    ANTIVIRAL_ANALYSIS_OUTPUT_DIR,
+    VBOF_NORMALIZED_JSON_PATH,
+    INTEGRATION_SUMMARY_PATH,
+    GENE_KNOCKOUT_RESULTS_PATH,
+    REACTION_KNOCKOUT_RESULTS_PATH,
+    TOP_GENE_TARGETS_PATH,
+    TOP_REACTION_TARGETS_PATH,
+    SUBSYSTEM_ESSENTIALITY_PATH,
+    METABOLIC_MODEL_REPORT_PATH
+)
+
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -67,14 +83,11 @@ plt.rcParams['figure.figsize'] = (11, 8.5)  # Letter size
 # ============================================================================
 def load_all_data():
     """Load all analysis data files."""
-    data_dir = Path("output")
-    analysis_dir = data_dir / "antiviral_analysis"
-    
     data = {}
     
     # VBOF data
     try:
-        with open(data_dir / "hmpv_vbof_normalized.json", 'r') as f:
+        with open(VBOF_NORMALIZED_JSON_PATH, 'r') as f:
             data['vbof'] = json.load(f)
         logger.info("Loaded VBOF data")
     except Exception as e:
@@ -83,7 +96,7 @@ def load_all_data():
     
     # Integration summary
     try:
-        with open(data_dir / "integration_summary.txt", 'r') as f:
+        with open(INTEGRATION_SUMMARY_PATH, 'r') as f:
             data['integration_summary'] = f.read()
         logger.info("Loaded integration summary")
     except Exception as e:
@@ -92,11 +105,11 @@ def load_all_data():
     
     # Antiviral analysis results
     try:
-        data['gene_knockouts'] = pd.read_csv(analysis_dir / "gene_knockout_results.csv")
-        data['reaction_knockouts'] = pd.read_csv(analysis_dir / "reaction_knockout_results.csv")
-        data['top_genes'] = pd.read_csv(analysis_dir / "top_gene_targets.csv")
-        data['top_reactions'] = pd.read_csv(analysis_dir / "top_reaction_targets.csv")
-        data['subsystems'] = pd.read_csv(analysis_dir / "subsystem_essentiality.csv")
+        data['gene_knockouts'] = pd.read_csv(GENE_KNOCKOUT_RESULTS_PATH)
+        data['reaction_knockouts'] = pd.read_csv(REACTION_KNOCKOUT_RESULTS_PATH)
+        data['top_genes'] = pd.read_csv(TOP_GENE_TARGETS_PATH)
+        data['top_reactions'] = pd.read_csv(TOP_REACTION_TARGETS_PATH)
+        data['subsystems'] = pd.read_csv(SUBSYSTEM_ESSENTIALITY_PATH)
         logger.info("Loaded antiviral analysis data")
     except Exception as e:
         logger.warning(f"Could not load antiviral analysis data: {e}")
@@ -584,8 +597,7 @@ def main():
             data['baseline_flux'] = 1.265437  # Default from previous runs
     
     # Generate PDF
-    output_path = Path("output/HMPV_Metabolic_Model_Report.pdf")
-    create_pdf_report(data, output_path)
+    create_pdf_report(data, METABOLIC_MODEL_REPORT_PATH)
     
     logger.info("=" * 70)
     logger.info("PDF REPORT GENERATION COMPLETE")

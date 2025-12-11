@@ -16,7 +16,7 @@ Input:
 
 Output:
 -------
-    - output/iHsaEC21_with_HMPV_VBOF.xml: Integrated model
+    - output/Model_with_HMPV_VBOF.xml: Integrated model
     - output/integration_summary.txt: Integration summary
     - Console output with validation results
 
@@ -44,7 +44,10 @@ from src.config import (
     MODEL_DIR,
     DEFAULT_HOST_MODEL,
     OUTPUT_DIR,
-    VBOF_REACTION_ID
+    VBOF_REACTION_ID,
+    VBOF_NORMALIZED_JSON_PATH,
+    INTEGRATION_SUMMARY_PATH,
+    INTEGRATED_MODEL_XML_SUFFIX
 )
 from src.exceptions import HMPVModelError
 
@@ -115,8 +118,7 @@ def main():
         logger.info("STEP 1: LOADING VBOF")
         logger.info("=" * 70)
         
-        vbof_path = output_dir / "hmpv_vbof_normalized.json"  # Use normalized VBOF
-        vbof_data = load_vbof_from_json(vbof_path)
+        vbof_data = load_vbof_from_json(VBOF_NORMALIZED_JSON_PATH)
         vbof_stoichiometry = vbof_data['combined_stoichiometry']
         
         logger.info(f"\nVBOF Components:")
@@ -218,7 +220,7 @@ def main():
         # Save integrated model (SBML)
         model_output_path = save_integrated_model(
             model=integrated_model,
-            output_path=output_dir / f"{integrated_model.id}_with_HMPV_VBOF.xml",
+            output_path=OUTPUT_DIR / f"{integrated_model.id}{INTEGRATED_MODEL_XML_SUFFIX}",
             format='sbml'
         )
         logger.info(f"Saved integrated model: {model_output_path}")
@@ -231,11 +233,10 @@ def main():
             validation=validation
         )
         
-        summary_path = output_dir / "integration_summary.txt"
-        with open(summary_path, 'w') as f:
+        with open(INTEGRATION_SUMMARY_PATH, 'w') as f:
             f.write(summary)
             f.write(f"\nGenerated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        logger.info(f"Saved integration summary: {summary_path}")
+        logger.info(f"Saved integration summary: {INTEGRATION_SUMMARY_PATH}")
         
         # Print summary
         print(summary)
@@ -250,7 +251,7 @@ def main():
         logger.info(f"\nHMPV VBOF successfully integrated into {integrated_model.id}!")
         logger.info(f"\nOutput files:")
         logger.info(f"  1. {model_output_path}")
-        logger.info(f"  2. {summary_path}")
+        logger.info(f"  2. {INTEGRATION_SUMMARY_PATH}")
         
       
         

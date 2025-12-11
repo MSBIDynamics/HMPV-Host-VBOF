@@ -51,6 +51,11 @@ from src.config import (
     DEFAULT_GENOME_FILE,
     DEFAULT_GFF_FILE,
     DEFAULT_PROTEIN_FILE,
+    VBOF_JSON_PATH,
+    VBOF_SUMMARY_PATH,
+    DEFAULT_GENOME_FILE,
+    DEFAULT_GFF_FILE,
+    DEFAULT_PROTEIN_FILE,
     HMPV_COPY_NUMBERS,
     COPY_NUMBER_CONFIDENCE,
     VIRION_DIAMETER_NM,
@@ -208,16 +213,14 @@ def main():
         
         # Save VBOF as JSON
         vbof_dict = export_vbof_to_dict(vbof)
-        vbof_json_path = output_dir / "hmpv_vbof.json"
         
-        with open(vbof_json_path, 'w') as f:
+        with open(VBOF_JSON_PATH, 'w') as f:
             json.dump(vbof_dict, f, indent=2)
         
-        logger.info(f"Saved VBOF to: {vbof_json_path}")
+        logger.info(f"Saved VBOF to: {VBOF_JSON_PATH}")
         
         # Save summary as text
-        summary_path = output_dir / "hmpv_vbof_summary.txt"
-        with open(summary_path, 'w') as f:
+        with open(VBOF_SUMMARY_PATH, 'w') as f:
             f.write("HMPV VBOF Summary\n")
             f.write("=" * 70 + "\n\n")
             f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
@@ -273,7 +276,7 @@ def main():
             for met_id, coef in produced:
                 f.write(f"  {met_id}: {coef}\n")
         
-        logger.info(f"Saved summary to: {summary_path}")
+        logger.info(f"Saved summary to: {VBOF_SUMMARY_PATH}")
         
         # =====================================================================
         # FINAL SUMMARY

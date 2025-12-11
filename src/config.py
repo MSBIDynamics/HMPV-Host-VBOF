@@ -29,13 +29,105 @@ DATA_DIR = Path("Data")
 GENOMIC_DIR = DATA_DIR / "genomic"
 PROTEIN_DIR = DATA_DIR / "protein"
 MODEL_DIR = DATA_DIR / "smbl"
-OUTPUT_DIR = Path("output")
+OUTPUT_DIR = Path("output_iHsaEC21")
 
 # Default file names
 DEFAULT_GENOME_FILE = "GCF_002815375.1_ASM281537v1_genomic.fna"
 DEFAULT_GFF_FILE = "GCF_002815375.1_ASM281537v1_genomic.gff"
 DEFAULT_PROTEIN_FILE = "GCF_002815375.1_ASM281537v1_protein.faa"
 DEFAULT_HOST_MODEL = "iHsaEC21_clean.xml"  # Clean model without SARS-CoV-2 VBOF
+DEFAULT_HOST_MODEL_ORIGINAL = "iHsaEC21.xml"  # Original model with SARS-CoV-2 VBOF
+
+# =============================================================================
+# OUTPUT FILE NAMES
+# =============================================================================
+
+# VBOF output files
+VBOF_JSON_FILE = "hmpv_vbof.json"
+VBOF_NORMALIZED_JSON_FILE = "hmpv_vbof_normalized.json"
+VBOF_SUMMARY_FILE = "hmpv_vbof_summary.txt"
+
+# Model integration output files
+INTEGRATION_SUMMARY_FILE = "integration_summary.txt"
+INTEGRATED_MODEL_XML_SUFFIX = "_with_HMPV_VBOF.xml"
+INTEGRATED_MODEL_JSON_SUFFIX = "_with_HMPV_VBOF.json"
+
+# Antiviral analysis output files
+ANTIVIRAL_ANALYSIS_DIR = "antiviral_analysis"
+GENE_KNOCKOUT_RESULTS_FILE = "gene_knockout_results.csv"
+REACTION_KNOCKOUT_RESULTS_FILE = "reaction_knockout_results.csv"
+TOP_GENE_TARGETS_FILE = "top_gene_targets.csv"
+TOP_REACTION_TARGETS_FILE = "top_reaction_targets.csv"
+SUBSYSTEM_ESSENTIALITY_FILE = "subsystem_essentiality.csv"
+ANTIVIRAL_TARGETS_REPORT_FILE = "antiviral_targets_report.txt"
+
+# Sensitivity analysis output files
+SENSITIVITY_ANALYSIS_DIR = "sensitivity_analysis"
+SCENARIO_SUMMARY_FILE = "scenario_summary.csv"
+ROBUST_GENE_TARGETS_FILE = "robust_gene_targets.csv"
+ROBUST_REACTION_TARGETS_FILE = "robust_reaction_targets.csv"
+COMPARISON_REPORT_FILE = "comparison_report.txt"
+COMMON_GENE_TARGETS_FILE = "common_gene_targets.csv"
+COMMON_REACTION_TARGETS_FILE = "common_reaction_targets.csv"
+UNIQUE_TARGETS_FILE = "unique_targets_by_scenario.csv"
+SCENARIO_STATISTICS_FILE = "scenario_statistics.csv"
+
+# Model cleaning output files
+MODEL_CLEANING_REPORT_FILE = "model_cleaning_report.txt"
+
+# Report generation output files
+METABOLIC_MODEL_REPORT_FILE = "HMPV_Metabolic_Model_Report.pdf"
+
+# =============================================================================
+# OUTPUT DIRECTORY PATHS
+# =============================================================================
+
+# Subdirectories in output
+ANTIVIRAL_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / ANTIVIRAL_ANALYSIS_DIR
+SENSITIVITY_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / SENSITIVITY_ANALYSIS_DIR
+
+# =============================================================================
+# FULL FILE PATHS (for convenience)
+# =============================================================================
+
+# Input file paths
+GENOME_FILE_PATH = GENOMIC_DIR / DEFAULT_GENOME_FILE
+GFF_FILE_PATH = GENOMIC_DIR / DEFAULT_GFF_FILE
+PROTEIN_FILE_PATH = PROTEIN_DIR / DEFAULT_PROTEIN_FILE
+HOST_MODEL_CLEAN_PATH = MODEL_DIR / DEFAULT_HOST_MODEL
+HOST_MODEL_ORIGINAL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_ORIGINAL
+
+# VBOF output paths
+VBOF_JSON_PATH = OUTPUT_DIR / VBOF_JSON_FILE
+VBOF_NORMALIZED_JSON_PATH = OUTPUT_DIR / VBOF_NORMALIZED_JSON_FILE
+VBOF_SUMMARY_PATH = OUTPUT_DIR / VBOF_SUMMARY_FILE
+
+# Integration output paths
+INTEGRATION_SUMMARY_PATH = OUTPUT_DIR / INTEGRATION_SUMMARY_FILE
+
+# Antiviral analysis output paths
+GENE_KNOCKOUT_RESULTS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / GENE_KNOCKOUT_RESULTS_FILE
+REACTION_KNOCKOUT_RESULTS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / REACTION_KNOCKOUT_RESULTS_FILE
+TOP_GENE_TARGETS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / TOP_GENE_TARGETS_FILE
+TOP_REACTION_TARGETS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / TOP_REACTION_TARGETS_FILE
+SUBSYSTEM_ESSENTIALITY_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / SUBSYSTEM_ESSENTIALITY_FILE
+ANTIVIRAL_TARGETS_REPORT_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / ANTIVIRAL_TARGETS_REPORT_FILE
+
+# Sensitivity analysis output paths
+SCENARIO_SUMMARY_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / SCENARIO_SUMMARY_FILE
+ROBUST_GENE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / ROBUST_GENE_TARGETS_FILE
+ROBUST_REACTION_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / ROBUST_REACTION_TARGETS_FILE
+COMPARISON_REPORT_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMPARISON_REPORT_FILE
+COMMON_GENE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMMON_GENE_TARGETS_FILE
+COMMON_REACTION_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMMON_REACTION_TARGETS_FILE
+UNIQUE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / UNIQUE_TARGETS_FILE
+SCENARIO_STATISTICS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / SCENARIO_STATISTICS_FILE
+
+# Model cleaning output paths
+MODEL_CLEANING_REPORT_PATH = OUTPUT_DIR / MODEL_CLEANING_REPORT_FILE
+
+# Report generation output paths
+METABOLIC_MODEL_REPORT_PATH = OUTPUT_DIR / METABOLIC_MODEL_REPORT_FILE
 
 
 # =============================================================================

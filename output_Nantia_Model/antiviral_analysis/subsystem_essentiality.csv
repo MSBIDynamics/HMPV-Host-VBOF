@@ -1,0 +1,2 @@
+subsystem,total_reactions,lethal_knockouts,significant_knockouts,avg_flux_reduction,max_flux_reduction,essentiality_score,sample_lethal_reactions
+Unknown,1770,57,4,0.03426874129615231,1.0000000000023264,0.06666666666666667,"Guanylate kinase (GMP:ATP);Lipid, flip-flop intracellular transport;Carnitine fatty-acyl transferase"

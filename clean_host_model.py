@@ -33,6 +33,16 @@ from datetime import datetime
 import cobra
 from cobra.io import read_sbml_model, write_sbml_model
 
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from src.config import (
+    MODEL_DIR,
+    HOST_MODEL_ORIGINAL_PATH,
+    HOST_MODEL_CLEAN_PATH,
+    MODEL_CLEANING_REPORT_PATH
+)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -265,13 +275,8 @@ def main():
     logger.info("=" * 70)
     logger.info(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Paths
-    input_model_path = Path("Data/smbl/iHsaEC21.xml")
-    output_model_path = Path("Data/smbl/iHsaEC21_clean.xml")
-    report_path = Path("output/model_cleaning_report.txt")
-    
     # Ensure output directory exists
-    report_path.parent.mkdir(exist_ok=True)
+    MODEL_CLEANING_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     
     # =========================================================================
     # STEP 1: Load original model
@@ -280,12 +285,12 @@ def main():
     logger.info("STEP 1: LOADING ORIGINAL MODEL")
     logger.info("=" * 70)
     
-    if not input_model_path.exists():
-        logger.error(f"Model file not found: {input_model_path}")
+    if not HOST_MODEL_ORIGINAL_PATH.exists():
+        logger.error(f"Model file not found: {HOST_MODEL_ORIGINAL_PATH}")
         sys.exit(1)
     
-    logger.info(f"Loading model from: {input_model_path}")
-    model = read_sbml_model(str(input_model_path))
+    logger.info(f"Loading model from: {HOST_MODEL_ORIGINAL_PATH}")
+    model = read_sbml_model(str(HOST_MODEL_ORIGINAL_PATH))
     
     # Analyze original model
     original_summary = analyze_model(model)
@@ -345,8 +350,8 @@ def main():
     logger.info("STEP 4: SAVING CLEANED MODEL")
     logger.info("=" * 70)
     
-    logger.info(f"Saving cleaned model to: {output_model_path}")
-    write_sbml_model(model, str(output_model_path))
+    logger.info(f"Saving cleaned model to: {HOST_MODEL_CLEAN_PATH}")
+    write_sbml_model(model, str(HOST_MODEL_CLEAN_PATH))
     logger.info("Model saved successfully!")
     
     # Generate report
@@ -354,7 +359,7 @@ def main():
         original_summary, 
         cleaned_summary, 
         removed_info, 
-        report_path
+        MODEL_CLEANING_REPORT_PATH
     )
     
     # Print summary
@@ -368,8 +373,8 @@ def main():
     logger.info("=" * 70)
     
     logger.info(f"\nOutput files:")
-    logger.info(f"  1. {output_model_path} (clean host model)")
-    logger.info(f"  2. {report_path} (cleaning report)")
+    logger.info(f"  1. {HOST_MODEL_CLEAN_PATH} (clean host model)")
+    logger.info(f"  2. {MODEL_CLEANING_REPORT_PATH} (cleaning report)")
     
   
     

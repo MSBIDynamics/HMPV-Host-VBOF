@@ -77,7 +77,16 @@ from src.config import (
     DEFAULT_PROTEIN_FILE,
     DEFAULT_HOST_MODEL,
     HMPV_COPY_NUMBERS,
-    VBOF_REACTION_ID
+    VBOF_REACTION_ID,
+    SENSITIVITY_ANALYSIS_OUTPUT_DIR,
+    SCENARIO_SUMMARY_PATH,
+    ROBUST_GENE_TARGETS_PATH,
+    ROBUST_REACTION_TARGETS_PATH,
+    COMPARISON_REPORT_PATH,
+    GENE_KNOCKOUT_RESULTS_FILE,
+    REACTION_KNOCKOUT_RESULTS_FILE,
+    TOP_GENE_TARGETS_FILE,
+    TOP_REACTION_TARGETS_FILE
 )
 from antiviral_target_analysis import (
     load_integrated_model,
@@ -387,10 +396,10 @@ def run_antiviral_analysis_for_scenario(
     
     # Save results
     output_dir.mkdir(exist_ok=True, parents=True)
-    scenario.gene_results.to_csv(output_dir / "gene_knockout_results.csv", index=False)
-    scenario.reaction_results.to_csv(output_dir / "reaction_knockout_results.csv", index=False)
-    scenario.top_genes.to_csv(output_dir / "top_gene_targets.csv", index=False)
-    scenario.top_rxns.to_csv(output_dir / "top_reaction_targets.csv", index=False)
+    scenario.gene_results.to_csv(output_dir / GENE_KNOCKOUT_RESULTS_FILE, index=False)
+    scenario.reaction_results.to_csv(output_dir / REACTION_KNOCKOUT_RESULTS_FILE, index=False)
+    scenario.top_genes.to_csv(output_dir / TOP_GENE_TARGETS_FILE, index=False)
+    scenario.top_rxns.to_csv(output_dir / TOP_REACTION_TARGETS_FILE, index=False)
     
     logger.info(f"  Results saved to: {output_dir}")
 
@@ -640,8 +649,7 @@ def main():
     logger.info(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     # Create output directory
-    output_dir = Path(OUTPUT_DIR) / "sensitivity_analysis"
-    output_dir.mkdir(exist_ok=True, parents=True)
+    SENSITIVITY_ANALYSIS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
     try:
         # =====================================================================
@@ -743,7 +751,7 @@ def main():
                     continue
                 
                 # Run antiviral analysis
-                scenario_output_dir = output_dir / scenario.scenario_id
+                scenario_output_dir = SENSITIVITY_ANALYSIS_OUTPUT_DIR / scenario.scenario_id
                 run_antiviral_analysis_for_scenario(scenario, scenario_output_dir)
                 
                 # Save scenario summary (only if analysis completed successfully)
@@ -774,8 +782,8 @@ def main():
         # Save scenario summary
         if scenario_summaries:
             summary_df = pd.DataFrame(scenario_summaries)
-            summary_df.to_csv(output_dir / "scenario_summary.csv", index=False)
-            logger.info(f"Scenario summary saved to: {output_dir / 'scenario_summary.csv'}")
+            summary_df.to_csv(SCENARIO_SUMMARY_PATH, index=False)
+            logger.info(f"Scenario summary saved to: {SCENARIO_SUMMARY_PATH}")
         
         # =====================================================================
         # STEP 5: Compare scenarios and identify robust targets
@@ -788,23 +796,23 @@ def main():
         
         # Save robust targets
         comparison_results['robust_genes'].to_csv(
-            output_dir / "robust_gene_targets.csv",
+            ROBUST_GENE_TARGETS_PATH,
             index=False
         )
         comparison_results['robust_rxns'].to_csv(
-            output_dir / "robust_reaction_targets.csv",
+            ROBUST_REACTION_TARGETS_PATH,
             index=False
         )
         
         logger.info(f"Robust targets saved:")
-        logger.info(f"  Genes: {output_dir / 'robust_gene_targets.csv'}")
-        logger.info(f"  Reactions: {output_dir / 'robust_reaction_targets.csv'}")
+        logger.info(f"  Genes: {ROBUST_GENE_TARGETS_PATH}")
+        logger.info(f"  Reactions: {ROBUST_REACTION_TARGETS_PATH}")
         
         # Generate comparison report
         generate_comparison_report(
             scenarios,
             comparison_results,
-            output_dir / "comparison_report.txt"
+            COMPARISON_REPORT_PATH
         )
         
         # =====================================================================

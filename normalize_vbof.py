@@ -28,6 +28,14 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from src.config import (
+    VBOF_JSON_PATH,
+    VBOF_NORMALIZED_JSON_PATH
+)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -215,13 +223,9 @@ def main():
     logger.info("VBOF NORMALIZATION")
     logger.info("=" * 70)
     
-    # Paths
-    input_vbof_path = Path("output/hmpv_vbof.json")
-    output_vbof_path = Path("output/hmpv_vbof_normalized.json")
-    
     # Load raw VBOF
-    logger.info(f"\nLoading VBOF from: {input_vbof_path}")
-    with open(input_vbof_path, 'r') as f:
+    logger.info(f"\nLoading VBOF from: {VBOF_JSON_PATH}")
+    with open(VBOF_JSON_PATH, 'r') as f:
         vbof_data = json.load(f)
     
     raw_stoichiometry = vbof_data['combined_stoichiometry']
@@ -275,8 +279,8 @@ def main():
         'raw_glycan_stoichiometry': vbof_data.get('glycan_stoichiometry', {}),
     }
     
-    logger.info(f"\nSaving normalized VBOF to: {output_vbof_path}")
-    with open(output_vbof_path, 'w') as f:
+    logger.info(f"\nSaving normalized VBOF to: {VBOF_NORMALIZED_JSON_PATH}")
+    with open(VBOF_NORMALIZED_JSON_PATH, 'w') as f:
         json.dump(normalized_vbof, f, indent=2)
     
     logger.info("Done!")
@@ -285,8 +289,8 @@ def main():
     print("\n" + "=" * 70)
     print("NORMALIZATION SUMMARY")
     print("=" * 70)
-    print(f"\nInput:  {input_vbof_path}")
-    print(f"Output: {output_vbof_path}")
+    print(f"\nInput:  {VBOF_JSON_PATH}")
+    print(f"Output: {VBOF_NORMALIZED_JSON_PATH}")
     print(f"\nNormalization factor: {total_consumed:.4e}")
     print(f"\nKey normalized coefficients:")
     key_mets = ['atp_c', 'gtp_c', 'leu__L_c', 'h2o_c', 'pi_c']

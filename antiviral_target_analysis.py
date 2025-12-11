@@ -45,6 +45,22 @@ from cobra import Model
 import pandas as pd
 import numpy as np
 
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from src.config import (
+    OUTPUT_DIR,
+    ANTIVIRAL_ANALYSIS_OUTPUT_DIR,
+    GENE_KNOCKOUT_RESULTS_PATH,
+    REACTION_KNOCKOUT_RESULTS_PATH,
+    TOP_GENE_TARGETS_PATH,
+    TOP_REACTION_TARGETS_PATH,
+    SUBSYSTEM_ESSENTIALITY_PATH,
+    ANTIVIRAL_TARGETS_REPORT_PATH,
+    INTEGRATED_MODEL_XML_SUFFIX,
+    VBOF_REACTION_ID
+)
+
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
 
@@ -59,7 +75,6 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 # CONSTANTS
 # ============================================================================
-VBOF_REACTION_ID = "HMPV_VBOF"
 ESSENTIALITY_THRESHOLD = 0.01      # < 1% of max flux = lethal
 SIGNIFICANT_THRESHOLD = 0.5         # < 50% of max flux = significant
 MODERATE_THRESHOLD = 0.9            # < 90% of max flux = moderate
@@ -590,10 +605,21 @@ def main():
     logger.info("=" * 70)
     logger.info(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Define paths
-    model_path = Path("output/iHsaEC21_CLEAN_with_HMPV_VBOF.xml")
-    output_dir = Path("output/antiviral_analysis")
-    output_dir.mkdir(exist_ok=True)
+    # Define paths from config
+    ANTIVIRAL_ANALYSIS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Find integrated model file (dynamically based on model ID)
+    # Look for files matching pattern: *_with_HMPV_VBOF.xml
+    integrated_model_files = list(OUTPUT_DIR.glob(f"*{INTEGRATED_MODEL_XML_SUFFIX}"))
+    if not integrated_model_files:
+        logger.error(f"No integrated model found in {OUTPUT_DIR}")
+        logger.error(f"Expected file pattern: *{INTEGRATED_MODEL_XML_SUFFIX}")
+        logger.error("Please run integrate_model.py first")
+        sys.exit(1)
+    
+    # Use the first found model (or most recent)
+    model_path = sorted(integrated_model_files, key=lambda p: p.stat().st_mtime, reverse=True)[0]
+    logger.info(f"Using integrated model: {model_path.name}")
     
     # =========================================================================
     # STEP 1: Load model
@@ -626,8 +652,8 @@ def main():
     logger.info("=" * 70)
     
     gene_results = perform_gene_knockout_analysis(model, baseline_flux)
-    gene_results.to_csv(output_dir / "gene_knockout_results.csv", index=False)
-    logger.info(f"Saved: {output_dir / 'gene_knockout_results.csv'}")
+    gene_results.to_csv(GENE_KNOCKOUT_RESULTS_PATH, index=False)
+    logger.info(f"Saved: {GENE_KNOCKOUT_RESULTS_PATH}")
     
     # =========================================================================
     # STEP 4: Reaction knockout analysis
@@ -637,8 +663,8 @@ def main():
     logger.info("=" * 70)
     
     reaction_results = perform_reaction_knockout_analysis(model, baseline_flux)
-    reaction_results.to_csv(output_dir / "reaction_knockout_results.csv", index=False)
-    logger.info(f"Saved: {output_dir / 'reaction_knockout_results.csv'}")
+    reaction_results.to_csv(REACTION_KNOCKOUT_RESULTS_PATH, index=False)
+    logger.info(f"Saved: {REACTION_KNOCKOUT_RESULTS_PATH}")
     
     # =========================================================================
     # STEP 5: Extract top targets
@@ -648,10 +674,10 @@ def main():
     logger.info("=" * 70)
     
     top_genes, top_rxns = extract_top_targets(gene_results, reaction_results)
-    top_genes.to_csv(output_dir / "top_gene_targets.csv", index=False)
-    top_rxns.to_csv(output_dir / "top_reaction_targets.csv", index=False)
-    logger.info(f"Saved: {output_dir / 'top_gene_targets.csv'}")
-    logger.info(f"Saved: {output_dir / 'top_reaction_targets.csv'}")
+    top_genes.to_csv(TOP_GENE_TARGETS_PATH, index=False)
+    top_rxns.to_csv(TOP_REACTION_TARGETS_PATH, index=False)
+    logger.info(f"Saved: {TOP_GENE_TARGETS_PATH}")
+    logger.info(f"Saved: {TOP_REACTION_TARGETS_PATH}")
     
     # =========================================================================
     # STEP 6: Subsystem analysis
@@ -661,8 +687,8 @@ def main():
     logger.info("=" * 70)
     
     subsystem_analysis = analyze_subsystem_essentiality(reaction_results)
-    subsystem_analysis.to_csv(output_dir / "subsystem_essentiality.csv", index=False)
-    logger.info(f"Saved: {output_dir / 'subsystem_essentiality.csv'}")
+    subsystem_analysis.to_csv(SUBSYSTEM_ESSENTIALITY_PATH, index=False)
+    logger.info(f"Saved: {SUBSYSTEM_ESSENTIALITY_PATH}")
     
     # =========================================================================
     # STEP 7: Generate report
@@ -674,9 +700,9 @@ def main():
     report = generate_report(
         model, baseline_flux, gene_results, reaction_results,
         top_genes, top_rxns, subsystem_analysis,
-        output_dir / "antiviral_targets_report.txt"
+        ANTIVIRAL_TARGETS_REPORT_PATH
     )
-    logger.info(f"Saved: {output_dir / 'antiviral_targets_report.txt'}")
+    logger.info(f"Saved: {ANTIVIRAL_TARGETS_REPORT_PATH}")
     
     # =========================================================================
     # SUMMARY
@@ -697,7 +723,7 @@ def main():
     for _, row in lethal_rxns.head(10).iterrows():
         print(f"  {row['reaction_id']} ({row['reaction_name']})")
     
-    print(f"\nOutput saved to: {output_dir}")
+    print(f"\nOutput saved to: {str(ANTIVIRAL_ANALYSIS_OUTPUT_DIR)}")
     print("=" * 70)
     
     logger.info("\n" + "=" * 70)

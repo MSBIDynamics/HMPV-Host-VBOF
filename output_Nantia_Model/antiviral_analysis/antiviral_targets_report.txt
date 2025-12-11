@@ -1,0 +1,306 @@
+
+================================================================================
+HMPV ANTIVIRAL TARGET IDENTIFICATION REPORT
+================================================================================
+
+Generated: 2025-12-11 15:17:54
+
+MODEL INFORMATION:
+------------------
+Model ID: 
+Total Reactions: 2047
+Total Genes: 1390
+VBOF Reaction: HMPV_VBOF
+Baseline VBOF Flux: 8.682478
+
+================================================================================
+SUMMARY
+================================================================================
+
+GENE KNOCKOUTS:
+  Total tested: 1390
+  Lethal (>99% reduction): 28
+  Significant (50-99%): 1
+  Moderate (10-50%): 0
+  Minimal (<10%): 1361
+
+REACTION KNOCKOUTS:
+  Total tested: 1770
+  Lethal (>99% reduction): 57
+  Significant (50-99%): 4
+  Moderate (10-50%): 0
+  Minimal (<10%): 1709
+
+================================================================================
+ESSENTIAL GENE TARGETS (Lethal for HMPV Production)
+================================================================================
+
+1. 2987_AT1 - GUK1
+   Flux Reduction: 100.0%
+   Associated Reactions (2): DGK1;GK1
+
+2. 51727_AT1 - CMPK1
+   Flux Reduction: 100.0%
+   Associated Reactions (5): CYTK11n;UMPK5;CYTK3n;CYTK13n;CYTK4n
+
+3. 3156_AT1 - HMGCR
+   Flux Reduction: 100.0%
+   Associated Reactions (1): HMGCOARx
+
+4. 2544_AT1 - 2544_AT1
+   Flux Reduction: 100.0%
+   Associated Reactions (1): PIter
+
+5. 10558_AT1 - SPTLC1
+   Flux Reduction: 100.0%
+   Associated Reactions (1): SERPT
+
+6. 6307_AT1 - MSMO1
+   Flux Reduction: 100.0%
+   Associated Reactions (2): C4STMO2r;C4STMO1r
+
+7. 788_AT1 - SLC25A20
+   Flux Reduction: 100.0%
+   Associated Reactions (28): LNELDCCRNt;RTOTAL2CRNt;LNLNCACRNt;VACCCRNt;DLNLCGCRNt;C180CRNt;C204CRNt;STRDNCCRNt;PCRNtm;TMNDNCCRNt
+
+8. 6713_AT1 - SQLE
+   Flux Reduction: 100.0%
+   Associated Reactions (1): SQLEr
+
+9. 259230_AT1 - SGMS1
+   Flux Reduction: 100.0%
+   Associated Reactions (1): SMS
+
+10. 4597_AT1 - MVD
+   Flux Reduction: 100.0%
+   Associated Reactions (1): DPMVDx
+
+11. 7108_AT1 - TM7SF2
+   Flux Reduction: 100.0%
+   Associated Reactions (1): C14STRr
+
+12. 4598_AT1 - MVK
+   Flux Reduction: 100.0%
+   Associated Reactions (1): MEVK1x
+
+13. 2531_AT1 - KDSR
+   Flux Reduction: 100.0%
+   Associated Reactions (1): 3DSPHR
+
+14. 1717_AT1 - DHCR7
+   Flux Reduction: 100.0%
+   Associated Reactions (2): DHCR71r;DHCR72r
+
+15. 2222_AT1 - FDFT1
+   Flux Reduction: 100.0%
+   Associated Reactions (1): SQLSr
+
+16. 3295_AT1 - HSD17B4
+   Flux Reduction: 100.0%
+   Associated Reactions (20): FAOXC260240x;FAOXC183806x;FAOXC200180x;FAOXC2242046x;FAOXC2442246x;HSD17B42x;FAOXC2452253x;C3STKR2r;FAOXC16080x;FAOXC2051843x
+
+17. 4047_AT1 - LSS
+   Flux Reduction: 100.0%
+   Associated Reactions (1): LNSTLSr
+
+18. 6309_AT1 - SC5D
+   Flux Reduction: 100.0%
+   Associated Reactions (2): LSTO2r;LSTO1r
+
+19. 1376_AT1 - CPT2
+   Flux Reduction: 100.0%
+   Associated Reactions (26): DLNLCGCPT2;LNLCCPT2;C180CPT2;LNLNCACPT2;C204CPT2;STRDNCCPT2;TMNDNCCPT2;C161CPT2;PTDCACRNCPT2;ADRNCPT2
+
+20. 1718_AT1 - DHCR24
+   Flux Reduction: 100.0%
+   Associated Reactions (3): DHCR242r;DHCR243r;DHCR241r
+
+================================================================================
+ESSENTIAL REACTION TARGETS (Lethal for HMPV Production)
+================================================================================
+
+1. GK1 - Guanylate kinase (GMP:ATP)
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: GUK1
+   Equation: atp_c + gmp_c <=> adp_c + gdp_c
+
+2. FRDPtr - Lipid, flip-flop intracellular transport
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: frdp_x <=> frdp_r
+
+3. RTOTAL2CRNCPT1 - Carnitine fatty-acyl transferase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: CPT1B;CPT1A;CPT1C;CPT1B;CPT1B;CPT1B
+   Equation: Rtotal2coa_c + crn_c --> Rtotal2crn_c + coa_c
+
+4. HMGCOAtx - Hydroxymethylglutaryl-CoA reversible peroxisomal transport
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: hmgcoa_c <=> hmgcoa_x
+
+5. C3STKR2r - C-3 sterol keto reductase (zymosterol)
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: HSD17B4
+   Equation: h_r + nadph_r + zym_int2_r --> nadp_r + zymst_r
+
+6. FADH2tru - FADH2 transporter, endoplasmic reticulum
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: fadh2_c --> fadh2_r
+
+7. Htx - H transporter, peroxisome
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: h_c <=> h_x
+
+8. CO2ter - CO2 endoplasmic reticular transport via diffusion
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: co2_c <=> co2_r
+
+9. ACGAMPM - Phosphoacetylglucosamine mutase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: PGM3
+   Equation: acgam6p_c <=> acgam1p_c
+
+10. LNS14DMr - Cytochrome P450 lanosterol 14-alpha-demethylase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: CYP51A1
+   Equation: 2.0 h_r + lanost_r + 3.0 nadph_r + 3.0 o2_r --> 44mctr_r + for_r + 4.0 h2o_r + 3...
+
+11. SMS - Sphingomyelin synthase (homo sapiens)
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: SGMS1
+   Equation: crm_hs_c + pchol_hs_c --> dag_hs_c + sphmyln_hs_c
+
+12. FADtru - FAD transporter, endoplasmic reticulum
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: fad_r --> fad_c
+
+13. UAGDP - UDP-N-acetylglucosamine diphosphorylase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: UAP1;UAP1L1
+   Equation: acgam1p_c + h_c + utp_c --> ppi_c + uacgam_c
+
+14. SERPT - Serine C palmitoyltransferase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: SPTLC1;SPTLC2
+   Equation: h_c + pmtcoa_c + ser__L_c --> 3dsphgn_c + co2_c + coa_c
+
+15. PPItx - Diphosphate transporter, peroxisome
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: ppi_c <=> ppi_x
+
+16. NADPtru - NADP transporter, endoplasmic reticulum
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: nadp_r --> nadp_c
+
+17. DSAT - Dihydrosphingosine N-acyltransferase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: Rtotalcoa_c + sphgn_c --> coa_c + dhcrm_hs_c + h_c
+
+18. ADPtx - ADP transporter, peroxisomal
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: 
+   Equation: adp_c <=> adp_x
+
+19. PMEVKx - Phosphomevalonate kinase
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: PMVK
+   Equation: 5pmev_x + atp_x --> 5dpmev_x + adp_x
+
+20. C4STMO1r - C-4 sterol methyl oxidase (4,4-dimethylzymosterol)
+   Subsystem: Unknown
+   Flux Reduction: 100.0%
+   Genes: MSMO1
+   Equation: 44mzym_r + 3.0 h_r + 3.0 nadph_r + 3.0 o2_r --> 4mzym_int1_r + 4.0 h2o_r + 3.0 n...
+
+================================================================================
+SIGNIFICANT IMPACT GENE TARGETS (50-99% reduction)
+================================================================================
+
+1. 64841_AT1 - GNPNAT1
+   Flux Reduction: 97.4%
+   Associated Reactions: ACGAM6PS
+
+================================================================================
+SIGNIFICANT IMPACT REACTION TARGETS (50-99% reduction)
+================================================================================
+
+1. ACGAM6PS - N acetylglucosamine 6 phosphate synthase
+   Flux Reduction: 97.4%
+   Genes: GNPNAT1
+
+2. GF6PTA - Glutamine-fructose-6-phosphate transaminase
+   Flux Reduction: 90.4%
+   Genes: GFPT2;GFPT1
+
+3. AHCi - Adenosylhomocysteinase
+   Flux Reduction: 88.9%
+   Genes: AHCYL1;AHCY;AHCYL1
+
+4. METAT - Methionine adenosyltransferase
+   Flux Reduction: 88.9%
+   Genes: MAT2B;MAT1A;MAT2B;MAT2A
+
+================================================================================
+SUBSYSTEM ESSENTIALITY ANALYSIS
+================================================================================
+
+1. Unknown
+   Total Reactions: 1770
+   Lethal Knockouts: 57
+   Essentiality Score: 0.067
+   Sample Lethal Reactions: Guanylate kinase (GMP:ATP);Lipid, flip-flop intracellular transport;Carnitine fatty-acyl transferase
+
+================================================================================
+INTERPRETATION AND RECOMMENDATIONS
+================================================================================
+
+The analysis identified 28 essential host genes and 
+57 essential reactions for HMPV virion production.
+
+POTENTIAL DRUG TARGETS:
+-----------------------
+Genes and reactions with lethal or significant impact on viral production
+represent potential antiviral drug targets. Priority targets are those that:
+1. Show >50% reduction in viral production when knocked out
+2. Have known inhibitors or are druggable
+3. Are not essential for host cell survival
+
+
+================================================================================
+FILES GENERATED
+================================================================================
+1. gene_knockout_results.csv - Complete gene knockout analysis
+2. reaction_knockout_results.csv - Complete reaction knockout analysis
+3. top_gene_targets.csv - Top antiviral gene targets
+4. top_reaction_targets.csv - Top antiviral reaction targets
+5. subsystem_essentiality.csv - Subsystem essentiality analysis
+6. antiviral_targets_report.txt - This report
+
+================================================================================
