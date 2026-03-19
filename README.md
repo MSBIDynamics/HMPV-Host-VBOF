@@ -621,7 +621,7 @@ This project follows strict coding standards:
 ## License
 
 Copyright (c) 2025 Syed Mushahid Hussain and MSBI Dynamics - Justus-Liebig-Universität Gießen . All rights reserved.
-
+<!--
 1. License Grant
    This source code and associated data are provided solely for **personal review or educational purposes**.
    Use of this code is **strictly limited to non-commercial, non-distributable purposes**. 
@@ -646,7 +646,7 @@ Copyright (c) 2025 Syed Mushahid Hussain and MSBI Dynamics - Justus-Liebig-Unive
    for any damages or misuse of the work.
 
 By accessing or using this project, you acknowledge and agree to comply with all terms of this license.
-
+-->
 
 ---
 
