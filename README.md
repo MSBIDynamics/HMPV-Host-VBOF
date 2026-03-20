@@ -4,12 +4,12 @@
 [![Zenodo DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.8270303-B4A069?style=flat-square&logo=zenodo&logoColor=white)](https://zenodo.org/badge/latestdoi/xxxxx)  
 
 
-<img align="right" src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="500" width="400"/>
-
 -----
 # HMPV Metabolic Modeling Project
 -----
 ## Table of Contents
+
+<img align="right" src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="400" width="300"/>
 -----
 1. [Project Overview](#project-overview)
 2. [Project Structure](#project-structure)
