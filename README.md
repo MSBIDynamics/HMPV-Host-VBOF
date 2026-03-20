@@ -3,7 +3,7 @@
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/MSBIDynamics/HMPV-Host-VBOF?logo=github&label=HMPV-Host-VBOFs&color=B4A069&style=flat-square)
 [![Zenodo DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.8270303-B4A069?style=flat-square&logo=zenodo&logoColor=white)](https://zenodo.org/badge/latestdoi/xxxxx)  
 
-<p align="center">
+<p align="right">
 <img src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="400" width="300"/>
 </p> 
 
