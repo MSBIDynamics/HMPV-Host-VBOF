@@ -10,6 +10,7 @@
 ## Table of Contents
 
 <img align="right" src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="400" width="300"/>
+
 -----
 1. [Project Overview](#project-overview)
 2. [Project Structure](#project-structure)
