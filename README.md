@@ -4,7 +4,7 @@
 [![Zenodo DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.8270303-B4A069?style=flat-square&logo=zenodo&logoColor=white)](https://zenodo.org/badge/latestdoi/xxxxx)  
 
 <p align="center">
-<img src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="300"/>
+<img src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="300" width="200"/>
 </p> 
 
 # HMPV Metabolic Modeling Project
