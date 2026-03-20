@@ -6,6 +6,7 @@
 
 <img align="right" src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/HMPV-VBOF.png" height="400" width="300"/>
 
+------
 # HMPV Metabolic Modeling Project
 
 ## Table of Contents
