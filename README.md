@@ -8,9 +8,9 @@
 
 ------
 # HMPV Metabolic Modeling Project
-
+------
 ## Table of Contents
-
+------
 1. [Project Overview](#project-overview)
 2. [Project Structure](#project-structure)
 3. [Installation](#installation)
