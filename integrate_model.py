@@ -17,7 +17,7 @@ Usage:
 Input:
 ------
     - output_HBEC/hmpv_vbof_normalized.json: VBOF stoichiometry from build_vbof.py
-    - Data/smbl/model_clean.xml: Host metabolic model (iHBEC)
+    - Data/sbml/model_clean.xml: Host metabolic model (iHBEC)
 
 Output:
 -------

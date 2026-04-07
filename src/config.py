@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 DATA_DIR = Path("Data")
 GENOMIC_DIR = DATA_DIR / "genomic"
 PROTEIN_DIR = DATA_DIR / "protein"
-MODEL_DIR = DATA_DIR / "smbl"
+MODEL_DIR = DATA_DIR / "sbml"
 OUTPUT_DIR = Path("output_HBEC")  # Output directory for HBEC model
 
 # Default file names

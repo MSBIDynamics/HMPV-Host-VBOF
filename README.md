@@ -117,7 +117,7 @@ GEM_HMPV-Host_Interactions/
 │   │   └── GCF_002815375.1_ASM281537v1_genomic.gff
 │   ├── protein/                  # Protein sequence files
 │   │   └── GCF_002815375.1_ASM281537v1_protein.faa
-│   └── smbl/                     # Host metabolic models (SBML format)
+│   └── sbml/                     # Host metabolic models (SBML format)
 │       ├── iHsaEC21.xml
 │       └── iHsaEC21_clean.xml
 │
