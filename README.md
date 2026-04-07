@@ -1,7 +1,16 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Repo Size](https://img.shields.io/github/repo-size/MSBIDynamics/HMPV-Host-VBOF)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/MSBIDynamics/HMPV-Host-VBOF?logo=github&label=HMPV-Host-VBOFs&color=B4A069&style=flat-square)
+[![Zenodo DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.8270303-B4A069?style=flat-square&logo=zenodo&logoColor=white)](https://zenodo.org/badge/latestdoi/xxxxx)  
+
+
 # HMPV Metabolic Modeling Project
 
 ## Table of Contents
 
+<img align="right" src="https://github.com/MSBIDynamics/HMPV-Host-VBOF/raw/main/Pipeline_HMPV_VBOF.png" height="400" width="400"/>
+
+-----
 1. [Project Overview](#project-overview)
 2. [Key Research Findings](#key-research-findings)
 3. [Project Structure](#project-structure)
@@ -767,7 +776,7 @@ This project follows strict coding standards:
 ## License
 
 Copyright (c) 2025 Syed Mushahid Hussain and MSBI Dynamics - Justus-Liebig-Universität Gießen . All rights reserved.
-
+<!--
 1. License Grant
    This source code and associated data are provided solely for **personal review or educational purposes**.
    Use of this code is **strictly limited to non-commercial, non-distributable purposes**. 
@@ -792,7 +801,7 @@ Copyright (c) 2025 Syed Mushahid Hussain and MSBI Dynamics - Justus-Liebig-Unive
    for any damages or misuse of the work.
 
 By accessing or using this project, you acknowledge and agree to comply with all terms of this license.
-
+-->
 
 ---
 
