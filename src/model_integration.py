@@ -16,20 +16,9 @@ Supported Host Models:
 - iHsaEC21.xml (Human epithelial cell - primary target)
 - Recon3D, Human1, iHsa (alternative models)
 
-=============================================================================
-SOURCES AND REFERENCES:
-=============================================================================
-
-1. COBRApy Documentation:
-   https://cobrapy.readthedocs.io/
-
-2. BiGG Models Database:
+ BiGG Models Database:
    http://bigg.ucsd.edu/
-   King et al. (2016) Nucleic Acids Res. DOI: 10.1093/nar/gkv1049
 
-3. VBOF Integration Methodology:
-   - Aller et al. (2018) J R Soc Interface 15:20180442
-   - Thiele et al. (2020) Bioinformatics
 
 =============================================================================
 
@@ -83,66 +72,70 @@ class MetaboliteMapping:
 #   - Some use uppercase: GLN_c, ILE_c, TYR_c, TRP_c
 #   - Some use _DASH_DASH_DASH_ instead of __: arg_DASH_DASH_DASH_L_c
 #   - Some use _DASH_ for -: pchol_DASH_hs_c
-METABOLITE_ID_VARIANTS = {
-    # Nucleotides
-    'atp_c': ['atp_c', 'ATP_c', 'M_atp_c'],
-    'utp_c': ['utp_c', 'UTP_c', 'M_utp_c'],
-    'gtp_c': ['gtp_c', 'GTP_c', 'M_gtp_c'],
-    'ctp_c': ['ctp_c', 'CTP_c', 'M_ctp_c'],
-    'adp_c': ['adp_c', 'ADP_c', 'M_adp_c'],
-    'gdp_c': ['gdp_c', 'GDP_c', 'M_gdp_c'],
-    'amp_c': ['amp_c', 'AMP_c', 'M_amp_c'],
-    
-    # Phosphate
-    'pi_c': ['pi_c', 'Pi_c', 'M_pi_c', 'PI_c'],
-    'ppi_c': ['ppi_c', 'PPi_c', 'M_ppi_c', 'PPI_c'],
-    
-    # Water and protons
-    'h2o_c': ['h2o_c', 'H2O_c', 'M_h2o_c', 'WATER_c', 'h2o_m', 'h2o_n', 'h2o_r', 'h2o_l'],
-    'h_c': ['h_c', 'H_c', 'M_h_c', 'PROTON_c'],
-    
-    # Amino acids (L-forms) - iHsaEC21 specific mappings
-    'ala__L_c': ['ala__L_c', 'ala_L_c', 'ALA_c', 'L_45_ALPHA_45_ALANINE_c', 'ala_DASH_DASH_DASH_L_c'],
-    'arg__L_c': ['arg__L_c', 'arg_L_c', 'ARG_c', 'arg_DASH_DASH_DASH_L_c', 'L_45_ARGININE_c'],
-    'asn__L_c': ['asn__L_c', 'asn_L_c', 'ASN_c', 'asn_DASH_DASH_DASH_L_c', 'L_45_ASPARAGINE_c'],
-    'asp__L_c': ['asp__L_c', 'asp_L_c', 'ASP_c', 'asp_DASH_DASH_DASH_L_c', 'L_45_ASPARTATE_c'],
-    'cys__L_c': ['cys__L_c', 'cys_L_c', 'CYS_c', 'cys_DASH_DASH_DASH_L_c', 'L_45_CYSTEINE_c'],
-    'glu__L_c': ['glu__L_c', 'glu_L_c', 'GLU_c', 'glu_DASH_DASH_DASH_L_c', 'L_45_GLUTAMATE_c'],
-    'gln__L_c': ['gln__L_c', 'gln_L_c', 'GLN_c', 'gln_DASH_DASH_DASH_L_c', 'L_45_GLUTAMINE_c'],
-    'gly_c': ['gly_c', 'GLY_c', 'Gly_c', 'GLYCINE_c'],
-    'his__L_c': ['his__L_c', 'his_L_c', 'HIS_c', 'his_DASH_DASH_DASH_L_c', 'L_45_HISTIDINE_c'],
-    'ile__L_c': ['ile__L_c', 'ile_L_c', 'ILE_c', 'ile_DASH_DASH_DASH_L_c', 'L_45_ISOLEUCINE_c'],
-    'leu__L_c': ['leu__L_c', 'leu_L_c', 'LEU_c', 'leu_DASH_DASH_DASH_L_c', 'L_45_LEUCINE_c'],
-    'lys__L_c': ['lys__L_c', 'lys_L_c', 'LYS_c', 'lys_DASH_DASH_DASH_L_c', 'L_45_LYSINE_c'],
-    'met__L_c': ['met__L_c', 'met_L_c', 'MET_c', 'met_DASH_DASH_DASH_L_c', 'L_45_METHIONINE_c'],
-    'phe__L_c': ['phe__L_c', 'phe_L_c', 'PHE_c', 'phe_DASH_DASH_DASH_L_c', 'L_45_PHENYLALANINE_c'],
-    'pro__L_c': ['pro__L_c', 'pro_L_c', 'PRO_c', 'pro_DASH_DASH_DASH_L_c', 'L_45_PROLINE_c'],
-    'ser__L_c': ['ser__L_c', 'ser_L_c', 'SER_c', 'ser_DASH_DASH_DASH_L_c', 'L_45_SERINE_c'],
-    'thr__L_c': ['thr__L_c', 'thr_L_c', 'THR_c', 'thr_DASH_DASH_DASH_L_c', 'L_45_THREONINE_c'],
-    'trp__L_c': ['trp__L_c', 'trp_L_c', 'TRP_c', 'trp_DASH_DASH_DASH_L_c', 'L_45_TRYPTOPHAN_c'],
-    'tyr__L_c': ['tyr__L_c', 'tyr_L_c', 'TYR_c', 'tyr_DASH_DASH_DASH_L_c', 'L_45_TYROSINE_c'],
-    'val__L_c': ['val__L_c', 'val_L_c', 'VAL_c', 'val_DASH_DASH_DASH_L_c', 'L_45_VALINE_c'],
-    
-    # Lipids - iHsaEC21 uses _DASH_ for hyphens
-    'pc_hs_c': ['pc_hs_c', 'pchol_DASH_hs_c', 'pchol_hs_c', 'PHOSPHATIDYLCHOLINE_c'],
-    'pe_hs_c': ['pe_hs_c', 'pe_DASH_hs_c', 'PHOSPHATIDYLETHANOLAMINE_c', 'pail_hs_c'],
-    'ps_hs_c': ['ps_hs_c', 'ps_DASH_hs_c', 'PHOSPHATIDYLSERINE_c'],
-    'sphmyln_hs_c': ['sphmyln_hs_c', 'sphmyln_DASH_hs_c', 'sphings_c', 'SPHINGOMYELIN_c'],
-    'chsterol_c': ['chsterol_c', 'chol_c', 'cholesterol_c', 'CHOLESTEROL_c', 'CHSTEROL_c'],
-    
-    # Glycan precursors (nucleotide sugars)
-    'uacgam_c': ['uacgam_c', 'udpacgam_c', 'udpglcnac_c', 'UDP_45_N_45_ACETYL_45_D_45_GLUCOSAMINE_c'],
-    'gdpmann_c': ['gdpmann_c', 'gdpman_c', 'GDP_45_MANNOSE_c', 'GDP_45_D_45_MANNOSE_c'],
-    'udpgal_c': ['udpgal_c', 'udpg_c', 'UDP_45_GALACTOSE_c', 'UDP_45_D_45_GALACTOSE_c'],
-    'cmpacna_c': ['cmpacna_c', 'cmpneu5ac_c', 'CMP_45_N_45_ACETYLNEURAMINATE_c'],
-    'gdpfuc_c': ['gdpfuc_c', 'gdpfuca_c', 'GDP_45_FUCOSE_c', 'GDP_45_L_45_FUCOSE_c'],
-    'udpgalfur_c': ['udpgalfur_c', 'udpgalnac_c', 'UDP_45_N_45_ACETYL_45_D_45_GALACTOSAMINE_c'],
-}
+METABOLITE_ID_VARIANTS ={
+        # Nucleotides
+        'atp_c': ['atp_c', 'ATP_c', 'M_atp_c', 'atp[c]'],
+        'utp_c': ['utp_c', 'UTP_c', 'M_utp_c', 'utp[c]'],
+        'gtp_c': ['gtp_c', 'GTP_c', 'M_gtp_c', 'gtp[c]'],
+        'ctp_c': ['ctp_c', 'CTP_c', 'M_ctp_c', 'ctp[c]'],
+        'adp_c': ['adp_c', 'ADP_c', 'M_adp_c', 'adp[c]'],
+        'gdp_c': ['gdp_c', 'GDP_c', 'M_gdp_c', 'gdp[c]'],
+        'amp_c': ['amp_c', 'AMP_c', 'M_amp_c', 'amp[c]'],
+        
+        # Phosphate
+        'pi_c': ['pi_c', 'Pi_c', 'M_pi_c', 'PI_c', 'pi[c]'],
+        'ppi_c': ['ppi_c', 'PPi_c', 'M_ppi_c', 'PPI_c', 'ppi[c]'],
+        
+        # Water and protons
+        'h2o_c': ['h2o_c', 'H2O_c', 'M_h2o_c', 'WATER_c', 'h2o_m', 'h2o_n', 'h2o_r', 'h2o_l', 'h2o[c]'],
+        'h_c': ['h_c', 'H_c', 'M_h_c', 'PROTON_c', 'h[c]'],
+        
+        # Amino acids
+        'ala__L_c': ['ala__L_c', 'ala_L_c', 'ALA_c', 'L_45_ALPHA_45_ALANINE_c', 'ala_DASH_DASH_DASH_L_c', 'ala_L[c]'],
+        'arg__L_c': ['arg__L_c', 'arg_L_c', 'ARG_c', 'arg_DASH_DASH_DASH_L_c', 'L_45_ARGININE_c', 'arg_L[c]'],
+        'asn__L_c': ['asn__L_c', 'asn_L_c', 'ASN_c', 'asn_DASH_DASH_DASH_L_c', 'L_45_ASPARAGINE_c', 'asn_L[c]'],
+        'asp__L_c': ['asp__L_c', 'asp_L_c', 'ASP_c', 'asp_DASH_DASH_DASH_L_c', 'L_45_ASPARTATE_c', 'asp_L[c]'],
+        'cys__L_c': ['cys__L_c', 'cys_L_c', 'CYS_c', 'cys_DASH_DASH_DASH_L_c', 'L_45_CYSTEINE_c', 'cys_L[c]'],
+        'glu__L_c': ['glu__L_c', 'glu_L_c', 'GLU_c', 'glu_DASH_DASH_DASH_L_c', 'L_45_GLUTAMATE_c', 'glu_L[c]'],
+        'gln__L_c': ['gln__L_c', 'gln_L_c', 'GLN_c', 'gln_DASH_DASH_DASH_L_c', 'L_45_GLUTAMINE_c', 'gln_L[c]'],
+        'gly_c': ['gly_c', 'GLY_c', 'Gly_c', 'GLYCINE_c', 'gly[c]'],
+        'his__L_c': ['his__L_c', 'his_L_c', 'HIS_c', 'his_DASH_DASH_DASH_L_c', 'L_45_HISTIDINE_c', 'his_L[c]'],
+        'ile__L_c': ['ile__L_c', 'ile_L_c', 'ILE_c', 'ile_DASH_DASH_DASH_L_c', 'L_45_ISOLEUCINE_c', 'ile_L[c]'],
+        'leu__L_c': ['leu__L_c', 'leu_L_c', 'LEU_c', 'leu_DASH_DASH_DASH_L_c', 'L_45_LEUCINE_c', 'leu_L[c]'],
+        'lys__L_c': ['lys__L_c', 'lys_L_c', 'LYS_c', 'lys_DASH_DASH_DASH_L_c', 'L_45_LYSINE_c', 'lys_L[c]'],
+        'met__L_c': ['met__L_c', 'met_L_c', 'MET_c', 'met_DASH_DASH_DASH_L_c', 'L_45_METHIONINE_c', 'met_L[c]'],
+        'phe__L_c': ['phe__L_c', 'phe_L_c', 'PHE_c', 'phe_DASH_DASH_DASH_L_c', 'L_45_PHENYLALANINE_c', 'phe_L[c]'],
+        'pro__L_c': ['pro__L_c', 'pro_L_c', 'PRO_c', 'pro_DASH_DASH_DASH_L_c', 'L_45_PROLINE_c', 'pro_L[c]'],
+        'ser__L_c': ['ser__L_c', 'ser_L_c', 'SER_c', 'ser_DASH_DASH_DASH_L_c', 'L_45_SERINE_c', 'ser_L[c]'],
+        'thr__L_c': ['thr__L_c', 'thr_L_c', 'THR_c', 'thr_DASH_DASH_DASH_L_c', 'L_45_THREONINE_c', 'thr_L[c]'],
+        'trp__L_c': ['trp__L_c', 'trp_L_c', 'TRP_c', 'trp_DASH_DASH_DASH_L_c', 'L_45_TRYPTOPHAN_c', 'trp_L[c]'],
+        'tyr__L_c': ['tyr__L_c', 'tyr_L_c', 'TYR_c', 'tyr_DASH_DASH_DASH_L_c', 'L_45_TYROSINE_c', 'tyr_L[c]'],
+        'val__L_c': ['val__L_c', 'val_L_c', 'VAL_c', 'val_DASH_DASH_DASH_L_c', 'L_45_VALINE_c', 'val_L[c]'],
+        
+        # Lipids
+        'pchol_hs_c': ['pchol_hs_c', 'pc_hs_c', 'pchol_DASH_hs_c', 'PHOSPHATIDYLCHOLINE_c', 'pchol_hs[c]'],
+        'pe_hs_c': ['pe_hs_c', 'pe_DASH_hs_c', 'PHOSPHATIDYLETHANOLAMINE_c', 'pe_hs[c]'],
+        'ps_hs_c': ['ps_hs_c', 'ps_DASH_hs_c', 'PHOSPHATIDYLSERINE_c', 'ps_hs[c]'],
+        'sphmyln_hs_c': ['sphmyln_hs_c', 'sphmyln_DASH_hs_c', 'sphings_c', 'SPHINGOMYELIN_c', 'sphmyln_hs[c]'],
+        'chsterol_c': ['chsterol_c', 'chol_c', 'cholesterol_c', 'CHOLESTEROL_c', 'CHSTEROL_c', 'chsterol[c]'],
+        'clpn_hs_c': ['clpn_hs_c', 'clpn_DASH_hs_c', 'CARDIOLIPIN_c', 'clpn_hs[c]'],
+        'pail_hs_c': ['pail_hs_c', 'pail_DASH_hs_c', 'PHOSPHATIDYLINOSITOL_c', 'pail_hs[c]'],
+        'lpe_hs_c': ['lpe_hs_c', 'lpe_DASH_hs_c', 'lysope_hs_c', 'LYSOPHOSPHATIDYLETHANOLAMINE_c', 'lpe_hs[c]'],
+        
+        # Glycan precursors
+        'uacgam_c': ['uacgam_c', 'udpacgam_c', 'udpglcnac_c', 'UDP_45_N_45_ACETYL_45_D_45_GLUCOSAMINE_c', 'uacgam[c]'],
+        'gdpmann_c': ['gdpmann_c', 'gdpman_c', 'GDP_45_MANNOSE_c', 'GDP_45_D_45_MANNOSE_c', 'gdpmann[c]'],
+        'udpgal_c': ['udpgal_c', 'udpg_c', 'UDP_45_GALACTOSE_c', 'UDP_45_D_45_GALACTOSE_c', 'udpgal[c]'],
+        'cmpacna_c': ['cmpacna_c', 'cmpneu5ac_c', 'CMP_45_N_45_ACETYLNEURAMINATE_c', 'cmpacna[c]'],
+        'gdpfuc_c': ['gdpfuc_c', 'gdpfuca_c', 'GDP_45_FUCOSE_c', 'GDP_45_L_45_FUCOSE_c', 'gdpfuc[c]'],
+        'udpgalfur_c': ['udpgalfur_c', 'udpgalnac_c', 'UDP_45_N_45_ACETYL_45_D_45_GALACTOSAMINE_c', 'udpgalfur[c]'],
+    }
 
 
 def load_host_model(model_path: str = None) -> Model:
     """
     Load the host metabolic model from SBML file.
+    
     
     Parameters:
     -----------
@@ -185,7 +178,7 @@ def load_host_model(model_path: str = None) -> Model:
 def get_model_metabolite_ids(model: Model) -> Set[str]:
     """
     Get all metabolite IDs in the model.
-    
+
     Parameters:
     -----------
     model : cobra.Model
@@ -622,4 +615,3 @@ Feasible: {validation['fba_result']['feasible']}
     summary += "================================================================================\n"
     
     return summary
-

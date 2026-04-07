@@ -22,8 +22,6 @@ from dataclasses import dataclass
 from .exceptions import MissingGenomeError
 
 logger = logging.getLogger(__name__)
-
-
 @dataclass
 class GenomeInfo:
     """Container for genome information."""
@@ -45,6 +43,8 @@ class GeneAnnotation:
     product: str
     protein_id: str
     locus_tag: str
+
+
 
 
 def load_genome(fasta_path: str) -> GenomeInfo:
@@ -125,12 +125,12 @@ def load_genome(fasta_path: str) -> GenomeInfo:
 
 def count_nucleotides(sequence: str) -> Dict[str, int]:
     """
-    Count nucleotides in a DNA/RNA sequence.
+    Count nucleotides in a RNA sequence.
     
     Parameters:
     -----------
     sequence : str
-        Nucleotide sequence (DNA or RNA)
+        Nucleotide sequence
     
     Returns:
     --------
@@ -149,15 +149,12 @@ def count_nucleotides(sequence: str) -> Dict[str, int]:
         'G': sequence.count('G'),
         'C': sequence.count('C'),
         'U': sequence.count('U'),  # In case sequence is already RNA
-        'N': sequence.count('N'),  # Ambiguous
     }
     
     # Combine T and U (for sequences that might have either)
     counts['T'] = counts['T'] + counts['U']
     
     return counts
-
-
 def parse_gff_annotations(gff_path: str) -> List[GeneAnnotation]:
     """
     Parse gene annotations from GFF file.

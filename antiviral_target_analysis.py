@@ -122,7 +122,6 @@ def load_integrated_model(model_path: Path) -> Model:
     model.objective = VBOF_REACTION_ID
     logger.info(f"Objective set to: {VBOF_REACTION_ID}")
     logger.info(f"Model loaded: {len(model.reactions)} reactions, {len(model.genes)} genes")
-    
     return model
 
 

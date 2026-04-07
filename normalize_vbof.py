@@ -33,7 +33,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src.config import (
     VBOF_JSON_PATH,
-    VBOF_NORMALIZED_JSON_PATH
+    VBOF_NORMALIZED_JSON_PATH,
+    METABOLITE_MOLECULAR_WEIGHTS,
+    STRUCTURAL_METABOLITES,
+    NUCLEOTIDE_BIGG_IDS,
+    AMINO_ACID_BIGG_IDS,
+    LIPID_FRACTIONS,
+    GLYCAN_PRECURSOR_BIGG_IDS,
+    COMMON_METABOLITE_IDS,
 )
 
 # Configure logging
@@ -44,91 +51,55 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Molecular weights (g/mol) - standard biochemistry values
-# Source: NIST Chemistry WebBook, Biochemistry textbooks
-MOLECULAR_WEIGHTS = {
-    # Nucleotides (NTPs)
-    'atp_c': 507.18,   # ATP
-    'gtp_c': 523.18,   # GTP
-    'ctp_c': 483.16,   # CTP
-    'utp_c': 484.14,   # UTP
-    
-    # Amino acids (average ~110 g/mol, using exact values)
-    'ala__L_c': 89.09,
-    'arg__L_c': 174.20,
-    'asn__L_c': 132.12,
-    'asp__L_c': 133.10,
-    'cys__L_c': 121.16,
-    'glu__L_c': 147.13,
-    'gln__L_c': 146.15,
-    'gly_c': 75.07,
-    'his__L_c': 155.16,
-    'ile__L_c': 131.17,
-    'leu__L_c': 131.17,
-    'lys__L_c': 146.19,
-    'met__L_c': 149.21,
-    'phe__L_c': 165.19,
-    'pro__L_c': 115.13,
-    'ser__L_c': 105.09,
-    'thr__L_c': 119.12,
-    'trp__L_c': 204.23,
-    'tyr__L_c': 181.19,
-    'val__L_c': 117.15,
-    
-    # Energy carriers
-    'adp_c': 427.20,
-    'amp_c': 347.22,
-    'gdp_c': 443.20,
-    'pi_c': 95.98,     # Phosphate
-    'ppi_c': 174.95,   # Pyrophosphate
-    'h2o_c': 18.02,
-    'h_c': 1.01,
-    
-    # Lipids (approximate average)
-    'pc_hs_c': 760.0,      # Phosphatidylcholine
-    'pe_hs_c': 720.0,      # Phosphatidylethanolamine
-    'ps_hs_c': 780.0,      # Phosphatidylserine
-    'sphmyln_hs_c': 730.0, # Sphingomyelin
-    'chsterol_c': 386.65,  # Cholesterol
-    
-    # Glycan precursors
-    'uacgam_c': 607.35,    # UDP-N-acetylglucosamine
-    'gdpmann_c': 605.34,   # GDP-mannose
-    'udpgal_c': 566.30,    # UDP-galactose
-    'cmpacna_c': 614.39,   # CMP-N-acetylneuraminic acid
-    'gdpfuc_c': 589.33,    # GDP-fucose
-    'udpgalfur_c': 607.35, # UDP-N-acetylgalactosamine
-}
+# Molecular weights and structural metabolites are imported from src.config above.
+# Edit those centralized definitions; this file uses them automatically.
+# Alias for local readability
+MOLECULAR_WEIGHTS = METABOLITE_MOLECULAR_WEIGHTS
 
 # Avogadro's number
 AVOGADRO = 6.022e23
-
+# Add genome-only ATP/GTP contribution manually
+GENOME_ATP_MOLECULES = 5103  # 5103 A nucleotides in genome
+GENOME_GTP_MOLECULES = 2538
 
 def calculate_virion_mass(vbof_stoichiometry: dict) -> float:
     """
-    Calculate the total mass of one virion based on VBOF stoichiometry.
-    
-    Parameters:
-    -----------
-    vbof_stoichiometry : dict
-        Dictionary of metabolite IDs to coefficients (raw counts)
-    
-    Returns:
-    --------
-    float : Mass of one virion in grams
+    Calculate virion dry mass (grams) from structural metabolites only.
+
+    Only metabolites in STRUCTURAL_METABOLITES contribute.  atp_c / gtp_c are
+    handled separately using their genome-nucleotide counts so that the large
+    energy-cost coefficients in the VBOF are excluded.
     """
     total_mass = 0.0
-    
-    for met_id, coef in vbof_stoichiometry.items():
-        if coef < 0:  # Only count consumed metabolites (substrates)
-            mw = MOLECULAR_WEIGHTS.get(met_id, 100.0)  # Default MW if not found
-            
-            # Mass = (molecules) * (MW g/mol) / Avogadro
-            mass = abs(coef) * mw / AVOGADRO
-            total_mass += mass
-    
-    return total_mass
+    contributions = {}
 
+    for met_id, coef in vbof_stoichiometry.items():
+        if met_id in STRUCTURAL_METABOLITES and coef < 0:
+            if met_id not in MOLECULAR_WEIGHTS:
+                raise KeyError(
+                    f"Structural metabolite '{met_id}' has no entry in "
+                    f"MOLECULAR_WEIGHTS — add its MW before running."
+                )
+            mw = MOLECULAR_WEIGHTS[met_id]
+            mass = abs(coef) * mw / AVOGADRO
+            contributions[met_id] = mass
+            total_mass += mass
+
+    # Genome-only ATP (A nucleotides) and GTP (G nucleotides)
+    atp_id = NUCLEOTIDE_BIGG_IDS['A']
+    gtp_id = NUCLEOTIDE_BIGG_IDS['G']
+    atp_mass = GENOME_ATP_MOLECULES * MOLECULAR_WEIGHTS[atp_id] / AVOGADRO
+    gtp_mass = GENOME_GTP_MOLECULES * MOLECULAR_WEIGHTS[gtp_id] / AVOGADRO
+    contributions[f'{atp_id} (genome only)'] = atp_mass
+    contributions[f'{gtp_id} (genome only)'] = gtp_mass
+    total_mass += atp_mass + gtp_mass
+
+    # Log every contribution for verification
+    logger.info("  Metabolite mass contributions:")
+    for met, mass in sorted(contributions.items(), key=lambda x: -x[1]):
+        logger.info(f"    {met:<30s}: {mass:.4e} g  ({mass / total_mass * 100:.2f}%)")
+
+    return total_mass
 
 def normalize_vbof(vbof_stoichiometry: dict, target_mass_g: float = 1.0) -> dict:
     """
@@ -238,6 +209,12 @@ def main():
     # Calculate total consumption
     total_consumed = sum(abs(c) for c in raw_stoichiometry.values() if c < 0)
     logger.info(f"\nTotal raw consumed: {total_consumed:.4e}")
+
+    # Calculate and log virion mass
+    virion_mass = calculate_virion_mass(raw_stoichiometry)
+    virions_per_gdcw = 1.0 / virion_mass if virion_mass > 0 else 0
+    logger.info(f"Calculated virion mass: {virion_mass:.4e} g")
+    logger.info(f"Virions per gDCW:       {virions_per_gdcw:.4e}")
     
     # =========================================================================
     # Normalization Method 1: Simple (divide by total consumed)
@@ -248,7 +225,8 @@ def main():
     
     # Use total consumed as normalization factor
     # This gives coefficients that represent fraction of total
-    normalized = normalize_simple(raw_stoichiometry, normalization_factor=total_consumed)
+    #normalized = normalize_simple(raw_stoichiometry, normalization_factor=total_consumed)
+    normalized = normalize_vbof(raw_stoichiometry, target_mass_g=1.0)
     
     logger.info(f"\nNormalized coefficients (sample):")
     for i, (k, v) in enumerate(list(normalized.items())[:5]):
@@ -293,11 +271,61 @@ def main():
     print(f"Output: {VBOF_NORMALIZED_JSON_PATH}")
     print(f"\nNormalization factor: {total_consumed:.4e}")
     print(f"\nKey normalized coefficients:")
-    key_mets = ['atp_c', 'gtp_c', 'leu__L_c', 'h2o_c', 'pi_c']
+    key_mets = [
+        NUCLEOTIDE_BIGG_IDS['A'],
+        NUCLEOTIDE_BIGG_IDS['G'],
+        AMINO_ACID_BIGG_IDS['L'],
+        COMMON_METABOLITE_IDS['h2o'],
+        COMMON_METABOLITE_IDS['pi'],
+    ]
     for met in key_mets:
         if met in normalized:
             print(f"  {met}: {normalized[met]:.6f}")
     
+    # =========================================================================
+    # Verification: corrected virion mass and category breakdown
+    # =========================================================================
+    print("\n" + "=" * 70)
+    print("VIRION MASS VERIFICATION")
+    print("=" * 70)
+    print(f"\nCorrected virion mass: {virion_mass:.4e} g  "
+          f"({virion_mass * 1e15:.2f} femtograms)")
+
+    # --- per-metabolite contributions (mirroring calculate_virion_mass logic) ---
+    atp_id = NUCLEOTIDE_BIGG_IDS['A']
+    gtp_id = NUCLEOTIDE_BIGG_IDS['G']
+    contributions = {}
+    for met_id, coef in raw_stoichiometry.items():
+        if met_id in STRUCTURAL_METABOLITES and coef < 0:
+            mw = MOLECULAR_WEIGHTS[met_id]
+            contributions[met_id] = abs(coef) * mw / AVOGADRO
+    contributions[f'{atp_id} (genome only)'] = GENOME_ATP_MOLECULES * MOLECULAR_WEIGHTS[atp_id] / AVOGADRO
+    contributions[f'{gtp_id} (genome only)'] = GENOME_GTP_MOLECULES * MOLECULAR_WEIGHTS[gtp_id] / AVOGADRO
+
+    # Top 10 by mass
+    top10 = sorted(contributions.items(), key=lambda x: -x[1])[:10]
+    print("\nTop 10 metabolites by mass contribution:")
+    for met, mass in top10:
+        print(f"  {met:<30s}: {mass:.4e} g  ({mass / virion_mass * 100:.1f}%)")
+
+    # Category breakdown — IDs sourced from config variables
+    nucleotide_ids = {
+        NUCLEOTIDE_BIGG_IDS['C'],
+        NUCLEOTIDE_BIGG_IDS['U'],
+        f'{atp_id} (genome only)',
+        f'{gtp_id} (genome only)',
+    }
+    categories = {
+        'Amino acids': set(AMINO_ACID_BIGG_IDS.values()),
+        'Lipids':      set(LIPID_FRACTIONS.keys()),
+        'Glycans':     set(GLYCAN_PRECURSOR_BIGG_IDS.values()),
+        'Nucleotides': nucleotide_ids,
+    }
+    print("\nMass breakdown by category:")
+    for cat, ids in categories.items():
+        cat_mass = sum(contributions.get(i, 0.0) for i in ids)
+        print(f"  {cat:<14s}: {cat_mass:.4e} g  ({cat_mass / virion_mass * 100:.1f}%)")
+
     return normalized
 
 

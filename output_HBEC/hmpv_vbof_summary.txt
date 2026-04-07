@@ -1,0 +1,44 @@
+HMPV VBOF Summary
+======================================================================
+
+Generated: 2026-04-07 07:19:56
+Morphology: spherical  |  Diameter: 209.0 nm
+Genome copies per virion: 1
+
+Total metabolites : 44
+Consumed          : 38
+Produced          : 6
+
+  nucleotides   : 4 metabolites  (total coef -7.6407e+06)
+  amino_acids   : 20 metabolites  (total coef -1.8980e+06)
+  lipids        : 8 metabolites  (total coef -5.9324e+05)
+
+CONSUMED METABOLITES (top 20):
+  h2o_c: -7627322.0
+  atp_c: -3836441.0
+  gtp_c: -3798522
+  chsterol_c: -380015
+  leu__L_c: -189025
+  ser__L_c: -172928
+  ala__L_c: -153879
+  lys__L_c: -138600
+  val__L_c: -132523
+  ile__L_c: -132436
+  thr__L_c: -131451
+  glu__L_c: -123706
+  gly_c: -111325
+  asn__L_c: -84451
+  pchol_hs_c: -78747
+  asp__L_c: -78281
+  gln__L_c: -77725
+  arg__L_c: -69646
+  pro__L_c: -68538
+  tyr__L_c: -66259
+
+PRODUCED METABOLITES:
+  ppi_c: 13350
+  adp_c: 3831338.0
+  amp_c: 3795966
+  gdp_c: 3795984
+  pi_c: 7627322.0
+  h_c: 7627322.0

@@ -37,7 +37,8 @@ from src.genome_analyzer import (
 from src.protein_analyzer import (
     load_proteins,
     calculate_protein_stoichiometry,
-    get_protein_summary
+    get_protein_summary,
+    get_copy_numbers,
 )
 from src.vbof_builder import (
     build_vbof,
@@ -60,7 +61,26 @@ from src.config import (
     COPY_NUMBER_CONFIDENCE,
     VIRION_DIAMETER_NM,
     VBOF_REACTION_ID,
-    print_configuration
+    print_configuration,
+    # Lipid parameters
+    LIPID_FRACTIONS,
+    LIPID_PACKING_DENSITY_NM2,
+    # Copy-number calculation parameters
+    USE_CALCULATED_COPY_NUMBERS,
+    VIRION_DIAMETER_NM,
+    N_NUCLEOTIDES_PER_PROTOMER,
+    GENOME_COPIES_PER_VIRION,
+    M_MEMBRANE_COVERAGE_FRACTION,
+    M_DIMER_FOOTPRINT_NM2,
+    SPIKE_WIDTH_NM,
+    SPIKE_SPACING_MODE,
+    SPIKE_SPACING_MIN_NM,
+    SPIKE_SPACING_AVG_NM,
+    SPIKE_SPACING_MAX_NM,
+    GLYCOPROTEIN_RATIO,
+    F_OLIGOMERIC_STATE,
+    G_OLIGOMERIC_STATE,
+    SH_OLIGOMERIC_STATE,
 )
 from src.exceptions import HMPVModelError
 
@@ -152,36 +172,56 @@ def main():
         logger.info("STEP 3: PROTEIN STOICHIOMETRY")
         logger.info("=" * 70)
         
+        # Resolve copy numbers (calculated or default, controlled by USE_CALCULATED_COPY_NUMBERS)
+        copy_numbers = get_copy_numbers(
+            genome_length=genome.length,
+            default_copy_numbers=HMPV_COPY_NUMBERS,
+            use_calculated=USE_CALCULATED_COPY_NUMBERS,
+            virion_diameter_nm=VIRION_DIAMETER_NM,
+            nt_per_protomer=N_NUCLEOTIDES_PER_PROTOMER,
+            genome_copies=GENOME_COPIES_PER_VIRION,
+            coverage_fraction=M_MEMBRANE_COVERAGE_FRACTION,
+            dimer_footprint_nm2=M_DIMER_FOOTPRINT_NM2,
+            spike_width_nm=SPIKE_WIDTH_NM,
+            spike_spacing_mode=SPIKE_SPACING_MODE,
+            spike_spacing_min_nm=SPIKE_SPACING_MIN_NM,
+            spike_spacing_avg_nm=SPIKE_SPACING_AVG_NM,
+            spike_spacing_max_nm=SPIKE_SPACING_MAX_NM,
+            ratio=GLYCOPROTEIN_RATIO,
+            oligomeric_states={'F': F_OLIGOMERIC_STATE, 'G': G_OLIGOMERIC_STATE, 'SH': SH_OLIGOMERIC_STATE},
+        )
+
+        logger.info(f"\nCopy number source: {'calculated' if USE_CALCULATED_COPY_NUMBERS else 'default'}")
         logger.info("\nUsing copy numbers:")
-        for protein, count in HMPV_COPY_NUMBERS.items():
+        for protein, count in copy_numbers.items():
             confidence = COPY_NUMBER_CONFIDENCE.get(protein, 'UNKNOWN')
             logger.info(f"  {protein}: {count} copies/virion (confidence: {confidence})")
-        
+
         # Calculate protein stoichiometry
         protein_stoichiometry = calculate_protein_stoichiometry(
             proteins,
-            copy_numbers=HMPV_COPY_NUMBERS
+            copy_numbers=copy_numbers
         )
-        
+
         # Calculate total amino acids
         total_amino_acids = sum(
-            proteins[gene].length * HMPV_COPY_NUMBERS[gene]
+            proteins[gene].length * copy_numbers[gene]
             for gene in proteins.keys()
-            if gene in HMPV_COPY_NUMBERS
+            if gene in copy_numbers
         )
-        
+
         logger.info(f"\nTotal amino acids in virion: {total_amino_acids}")
-        
+
         # =====================================================================
         # STEP 4: Build complete VBOF
         # =====================================================================
         logger.info("\n" + "=" * 70)
         logger.info("STEP 4: VBOF CONSTRUCTION")
         logger.info("=" * 70)
-        
+
         # Get F and G protein copy numbers for glycan calculation
-        f_copy_number = HMPV_COPY_NUMBERS.get('F', 350)
-        g_copy_number = HMPV_COPY_NUMBERS.get('G', 250)
+        f_copy_number = copy_numbers.get('F', 350)
+        g_copy_number = copy_numbers.get('G', 250)
         
         vbof = build_vbof(
             genome_stoichiometry=genome_stoichiometry,
@@ -233,12 +273,35 @@ def main():
             
             f.write("PROTEIN INFORMATION\n")
             f.write("-" * 40 + "\n")
+            f.write(f"Copy number source: {'calculated (biophysical)' if USE_CALCULATED_COPY_NUMBERS else 'default (literature)'}\n\n")
+            f.write(f"{'Protein':<12} {'Length (aa)':>12} {'Copies/virion':>14} {'Total AAs':>12}\n")
+            f.write("-" * 52 + "\n")
             for gene_name, info in protein_summary['proteins'].items():
-                copy_num = HMPV_COPY_NUMBERS.get(gene_name, 'N/A')
-                f.write(f"{gene_name}: {info['length']} aa, {copy_num} copies/virion\n")
-            f.write(f"\nTotal amino acids in virion: {total_amino_acids}\n\n")
+                copy_num = copy_numbers.get(gene_name, 0)
+                total_aas = info['length'] * copy_num if isinstance(copy_num, (int, float)) else 'N/A'
+                copy_str = str(copy_num) if copy_num != 'N/A' else 'N/A'
+                total_str = f"{total_aas:,}" if isinstance(total_aas, (int, float)) else total_aas
+                f.write(f"{gene_name:<12} {info['length']:>12,} {copy_str:>14} {total_str:>12}\n")
+            f.write("-" * 52 + "\n")
+            f.write(f"{'TOTAL':<12} {'':>12} {'':>14} {total_amino_acids:>12,}\n\n")
             
-            # NEW: Add glycan information
+            # Lipid information
+            f.write("LIPID ENVELOPE INFORMATION\n")
+            f.write("-" * 40 + "\n")
+            f.write("Source: Barnes et al. (1987) J Lipid Res 28:130-137 (Sendai virus)\n")
+            f.write(f"Virion diameter: {VIRION_DIAMETER_NM} nm\n")
+            f.write(f"Lipid packing density: {LIPID_PACKING_DENSITY_NM2} nm²/lipid\n\n")
+            lipid_mets = {k: v for k, v in vbof.combined_stoichiometry.items()
+                          if k in LIPID_FRACTIONS}
+            total_lipids_count = sum(abs(v) for v in lipid_mets.values())
+            f.write(f"{'Lipid':<20} {'Fraction':>10} {'Count':>10}\n")
+            f.write("-" * 42 + "\n")
+            for lipid_id, fraction in LIPID_FRACTIONS.items():
+                count = abs(lipid_mets.get(lipid_id, 0))
+                f.write(f"{lipid_id:<20} {fraction:>10.4f} {count:>10}\n")
+            f.write(f"\nTotal lipid molecules: {total_lipids_count}\n\n")
+
+            # Glycan information
             f.write("GLYCAN INFORMATION\n")
             f.write("-" * 40 + "\n")
             f.write("Sources:\n")

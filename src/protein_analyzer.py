@@ -14,11 +14,13 @@ Author: Syed Mushahid Hussain
 """
 
 import logging
+import math
 from pathlib import Path
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
 
 from .exceptions import MissingProteinDataError, MissingCopyNumberError
+from .config import AMINO_ACID_BIGG_IDS, METABOLITE_MOLECULAR_WEIGHTS
 
 logger = logging.getLogger(__name__)
 
@@ -31,43 +33,48 @@ logger = logging.getLogger(__name__)
 #
 # SOURCES AND REFERENCES:
 #
-# 1. MOLECULAR WEIGHTS:
-#    - IUPAC-IUB Joint Commission on Biochemical Nomenclature (1984)
-#      "Nomenclature and Symbolism for Amino Acids"
-#      Pure Appl Chem 56(5):595-624. DOI: 10.1351/pac198456050595
-#      https://iupac.org/what-we-do/nomenclature/
 #
-# 2. BIGG DATABASE IDs:
+# 1. BIGG DATABASE IDs:
 #    - King et al. (2016) "BiGG Models: A platform for integrating genome-scale models"
 #      Nucleic Acids Res 44(D1):D515-22. DOI: 10.1093/nar/gkv1049
 #      http://bigg.ucsd.edu/universal/metabolites
 #
-# 3. AMINO ACID BIOCHEMISTRY:
+# 2. AMINO ACID BIOCHEMISTRY:
 #    - Berg, Tymoczko, Stryer (2015) "Biochemistry" 8th Edition
 #      Chapter 2: Protein Composition and Structure
-#      https://www.ncbi.nlm.nih.gov/books/NBK22364/
+#      https://dn790008.ca.archive.org/0/items/JeremyM.BergJohnL.TymoczkoGregoryJ.GattoJr.LubertStryerBiochemistry_201708/Jeremy%20M.%20Berg%2C%20John%20L.%20Tymoczko%2C%20Gregory%20J.%20Gatto%20Jr.%2C%20Lubert%20Stryer%20Biochemistry.pdf
 #
+# BiGG IDs and MWs sourced from config — edit there to propagate everywhere
+_AA_META = [
+    ('A', 'Alanine',       'Ala'),
+    ('R', 'Arginine',      'Arg'),
+    ('N', 'Asparagine',    'Asn'),
+    ('D', 'Aspartate',     'Asp'),
+    ('C', 'Cysteine',      'Cys'),
+    ('E', 'Glutamate',     'Glu'),
+    ('Q', 'Glutamine',     'Gln'),
+    ('G', 'Glycine',       'Gly'),
+    ('H', 'Histidine',     'His'),
+    ('I', 'Isoleucine',    'Ile'),
+    ('L', 'Leucine',       'Leu'),
+    ('K', 'Lysine',        'Lys'),
+    ('M', 'Methionine',    'Met'),
+    ('F', 'Phenylalanine', 'Phe'),
+    ('P', 'Proline',       'Pro'),
+    ('S', 'Serine',        'Ser'),
+    ('T', 'Threonine',     'Thr'),
+    ('W', 'Tryptophan',    'Trp'),
+    ('Y', 'Tyrosine',      'Tyr'),
+    ('V', 'Valine',        'Val'),
+]
 AMINO_ACID_INFO = {
-    'A': {'name': 'Alanine', 'abbrev': 'Ala', 'mw': 89.09, 'bigg_id': 'ala__L_c'},
-    'R': {'name': 'Arginine', 'abbrev': 'Arg', 'mw': 174.20, 'bigg_id': 'arg__L_c'},
-    'N': {'name': 'Asparagine', 'abbrev': 'Asn', 'mw': 132.12, 'bigg_id': 'asn__L_c'},
-    'D': {'name': 'Aspartate', 'abbrev': 'Asp', 'mw': 133.10, 'bigg_id': 'asp__L_c'},
-    'C': {'name': 'Cysteine', 'abbrev': 'Cys', 'mw': 121.16, 'bigg_id': 'cys__L_c'},
-    'E': {'name': 'Glutamate', 'abbrev': 'Glu', 'mw': 147.13, 'bigg_id': 'glu__L_c'},
-    'Q': {'name': 'Glutamine', 'abbrev': 'Gln', 'mw': 146.15, 'bigg_id': 'gln__L_c'},
-    'G': {'name': 'Glycine', 'abbrev': 'Gly', 'mw': 75.07, 'bigg_id': 'gly_c'},
-    'H': {'name': 'Histidine', 'abbrev': 'His', 'mw': 155.16, 'bigg_id': 'his__L_c'},
-    'I': {'name': 'Isoleucine', 'abbrev': 'Ile', 'mw': 131.17, 'bigg_id': 'ile__L_c'},
-    'L': {'name': 'Leucine', 'abbrev': 'Leu', 'mw': 131.17, 'bigg_id': 'leu__L_c'},
-    'K': {'name': 'Lysine', 'abbrev': 'Lys', 'mw': 146.19, 'bigg_id': 'lys__L_c'},
-    'M': {'name': 'Methionine', 'abbrev': 'Met', 'mw': 149.21, 'bigg_id': 'met__L_c'},
-    'F': {'name': 'Phenylalanine', 'abbrev': 'Phe', 'mw': 165.19, 'bigg_id': 'phe__L_c'},
-    'P': {'name': 'Proline', 'abbrev': 'Pro', 'mw': 115.13, 'bigg_id': 'pro__L_c'},
-    'S': {'name': 'Serine', 'abbrev': 'Ser', 'mw': 105.09, 'bigg_id': 'ser__L_c'},
-    'T': {'name': 'Threonine', 'abbrev': 'Thr', 'mw': 119.12, 'bigg_id': 'thr__L_c'},
-    'W': {'name': 'Tryptophan', 'abbrev': 'Trp', 'mw': 204.23, 'bigg_id': 'trp__L_c'},
-    'Y': {'name': 'Tyrosine', 'abbrev': 'Tyr', 'mw': 181.19, 'bigg_id': 'tyr__L_c'},
-    'V': {'name': 'Valine', 'abbrev': 'Val', 'mw': 117.15, 'bigg_id': 'val__L_c'},
+    code: {
+        'name':    name,
+        'abbrev':  abbrev,
+        'bigg_id': AMINO_ACID_BIGG_IDS[code],
+        'mw':      METABOLITE_MOLECULAR_WEIGHTS[AMINO_ACID_BIGG_IDS[code]],
+    }
+    for code, name, abbrev in _AA_META
 }
 
 
@@ -417,6 +424,334 @@ def get_protein_summary(proteins: Dict[str, ProteinInfo]) -> Dict:
     
     summary['total_amino_acids'] = total_aa
     summary['total_molecular_weight'] = round(total_mw, 2)
-    
+
     return summary
 
+
+# =============================================================================
+# BIOPHYSICAL COPY NUMBER CALCULATIONS
+# =============================================================================
+
+def calculate_virion_surface_area(
+    morphology: str,
+    diameter_nm: float,
+    length_nm: Optional[float] = None,
+) -> float:
+    """
+    Calculate virion outer surface area based on particle morphology.
+
+    Spherical
+    ---------
+    Models the particle as a perfect sphere:
+        A = 4π r²
+    where r = diameter_nm / 2.
+
+    Filamentous
+    -----------
+    Models the particle as a capsule (straight cylinder capped at both ends
+    with hemispheres of the same radius):
+        A = 2π r (L - 2r) + 4π r²   →   simplifies to   A = 2π r L
+    where r = diameter_nm / 2  and  L = total tip-to-tip length_nm.
+
+    Derivation of the simplification:
+      Lateral cylinder area  = 2π r (L - 2r)
+      Two hemispherical caps = 4π r²  (= one full sphere)
+      Total = 2πrL - 4πr² + 4πr² = 2πrL  
+
+    Note: when L = 2r (degenerate case, a sphere), A = 2πr·2r = 4πr² 
+
+    Parameters
+    ----------
+    morphology : str
+        "spherical" or "filamentous".
+    diameter_nm : float
+        Sphere diameter for spherical; tube cross-section diameter for
+        filamentous (nm).
+    length_nm : float | None
+        Total tip-to-tip length for filamentous particles (nm).
+        Must be >= diameter_nm.  Ignored for spherical.
+
+    Returns
+    -------
+    float  Surface area in nm².
+
+   
+    """
+    radius = diameter_nm / 2.0
+    if morphology == "spherical":
+        return 4.0 * math.pi * radius ** 2
+    elif morphology == "filamentous":
+        if length_nm is None:
+            raise ValueError(
+                "length_nm must be provided for filamentous morphology."
+            )
+        if length_nm < diameter_nm:
+            raise ValueError(
+                f"length_nm ({length_nm} nm) must be >= diameter_nm ({diameter_nm} nm) "
+                "for a valid capsule shape."
+            )
+        return 2.0 * math.pi * radius * length_nm
+    else:
+        raise ValueError(
+            f"Unknown morphology {morphology!r}. Expected 'spherical' or 'filamentous'."
+        )
+
+
+def calculate_n_copy_number(
+    genome_length: int,
+    nt_per_protomer: int = 7,
+    genome_copies: int = 1
+) -> int:
+    """
+    Calculate N protein copy number from genome length and binding stoichiometry.
+
+    Formula: N_copies = (L_genome * genome_copies) / nt_per_protomer
+
+    Parameters
+    ----------
+    genome_length : int
+        Total nucleotides in the viral genome.
+    nt_per_protomer : int
+        Nucleotides bound per N protomer (default 7, from Tawar et al. 2009).
+    genome_copies : int
+        Number of genome copies per virion (default 1 for spherical particles).
+
+    Returns
+    -------
+    int : Estimated N protein copy number.
+
+    References
+    ----------
+    Tawar et al. (2009) Science 326:1279-83  — RSV N-RNA crystal structure, 7 nt/N.
+    """
+    copies = (genome_length * genome_copies) / nt_per_protomer
+    result = int(round(copies))
+    logger.info(f"N protein copy number: {genome_length} nt / {nt_per_protomer} nt per protomer "
+                f"× {genome_copies} genome(s) = {result}")
+    return result
+
+
+def calculate_m_copy_number(
+    virion_diameter_nm: float = 209.0,
+    coverage_fraction: float = 0.24,
+    dimer_footprint_nm2: float = 35.8,
+    morphology: str = "spherical",
+    virion_length_nm: Optional[float] = None,
+) -> int:
+    """
+    Estimate M protein copy number from virion surface area and M-layer geometry.
+
+    Formula (shape-independent):
+        A_total    = calculate_virion_surface_area(morphology, diameter, length)
+        A_M        = A_total × coverage_fraction
+        N_dimers   = A_M / dimer_footprint_nm2
+        N_monomers = N_dimers × 2
+
+    Shape-specific surface area:
+        Spherical   : A = 4π r²
+        Filamentous : A = 2π r L   (capsule formula)
+
+    Parameters
+    ----------
+    virion_diameter_nm : float
+        Sphere diameter for spherical; tube cross-section diameter for
+        filamentous (nm).
+    coverage_fraction : float
+        Fraction of inner membrane covered by M layer
+        (default 0.24, from RSV cryo-ET, Kiss et al. 2014).
+    dimer_footprint_nm2 : float
+        Membrane-facing convex-hull area of the M dimer in nm²
+        (default 35.8 nm², YZ-plane projection of PDB 4LP7, Leyrat et al. 2014).
+    morphology : str
+        "spherical" (default) or "filamentous".
+    virion_length_nm : float | None
+        Total tip-to-tip length for filamentous particles (nm).
+        Required when morphology="filamentous".
+
+    Returns
+    -------
+    int : Estimated M protein monomer copy number.
+    """
+    surface_area = calculate_virion_surface_area(morphology, virion_diameter_nm, virion_length_nm)
+    m_covered_area = surface_area * coverage_fraction
+    n_dimers = m_covered_area / dimer_footprint_nm2
+    n_monomers = int(round(n_dimers * 2))
+    logger.info(
+        f"M protein copy number ({morphology}): surface={surface_area:.0f} nm², "
+        f"M-covered={m_covered_area:.0f} nm², "
+        f"dimers={n_dimers:.1f} → monomers={n_monomers}"
+    )
+    return n_monomers
+
+
+def calculate_glycoprotein_copy_numbers(
+    virion_diameter_nm: float = 209.0,
+    spike_width_nm: float = 11.5,
+    spike_spacing_nm: float = 8.0,
+    ratio: Dict[str, int] = None,
+    oligomeric_states: Dict[str, int] = None,
+    morphology: str = "spherical",
+    virion_length_nm: Optional[float] = None,
+) -> Dict[str, int]:
+    """
+    Estimate F, G, and SH copy numbers using a hexagonal spike-packing model.
+
+    Formula (shape-independent):
+        A_virion       = calculate_virion_surface_area(morphology, diameter, length)
+        d              = spike_width + spike_spacing      (centre-to-centre distance)
+        A_spike        = (√3 / 2) × d²                   (Voronoi cell, hex packing)
+        N_spikes       = A_virion / A_spike
+        copies_i       = (ratio_i / Σratio) × N_spikes × oligomeric_state_i
+
+    Shape-specific surface area:
+        Spherical   : A = 4π r²
+        Filamentous : A = 2π r L   (capsule formula)
+
+    Parameters
+    ----------
+    virion_diameter_nm : float
+        Sphere diameter for spherical; tube cross-section diameter for
+        filamentous (nm).
+    spike_width_nm : float
+        Average glycoprotein spike width in nm (default 11.5, Walsh et al. 2015).
+    spike_spacing_nm : float
+        Inter-spike gap in nm (default 8.0 = average spacing).
+    ratio : dict
+        F:G:SH stoichiometric ratio (default {'F': 5, 'G': 3, 'SH': 1}).
+    oligomeric_states : dict
+        Subunits per spike: F=3 (trimer), G=1 (monomer), SH=5 (pentamer).
+    morphology : str
+        "spherical" (default) or "filamentous".
+    virion_length_nm : float | None
+        Total tip-to-tip length for filamentous particles (nm).
+        Required when morphology="filamentous".
+
+    Returns
+    -------
+    dict : {'F': int, 'G': int, 'SH': int} copy numbers per virion.
+
+    References
+    ----------
+    Walsh et al. (2015)     — RSV spike width/spacing by EM.
+    Conley et al. (2022)    — RSV cryo-ET hexagonal spike arrays.
+    McLellan (2013), Battles (2017) — F homotrimer.
+    Thammawat (2008)        — G monomer.
+    Gan et al. (2012)       — RSV SH pentamer (applied by analogy to HMPV SH).
+    Schildgen et al. (2011) — transcription gradient supporting F > G > SH.
+    """
+    if ratio is None:
+        ratio = {'F': 5, 'G': 3, 'SH': 1}
+    if oligomeric_states is None:
+        oligomeric_states = {'F': 3, 'G': 1, 'SH': 5}
+
+    surface_area = calculate_virion_surface_area(morphology, virion_diameter_nm, virion_length_nm)
+
+    # Hexagonal packing
+    d = spike_width_nm + spike_spacing_nm
+    spike_area = (math.sqrt(3) / 2.0) * d ** 2
+
+    n_spikes = surface_area / spike_area
+    ratio_total = sum(ratio.values())
+
+    copy_numbers = {}
+    for protein, r in ratio.items():
+        spikes_for_protein = (r / ratio_total) * n_spikes
+        oligo = oligomeric_states.get(protein, 1)
+        copy_numbers[protein] = int(round(spikes_for_protein * oligo))
+
+    logger.info(
+        f"Glycoprotein copy numbers ({morphology}, d={d:.1f} nm, {n_spikes:.0f} total spikes): "
+        + ", ".join(f"{p}={c}" for p, c in copy_numbers.items())
+    )
+    return copy_numbers
+
+
+def get_copy_numbers(
+    genome_length: int,
+    default_copy_numbers: Dict[str, int],
+    use_calculated: bool = False,
+    virion_diameter_nm: float = 209.0,
+    nt_per_protomer: int = 7,
+    genome_copies: int = 1,
+    coverage_fraction: float = 0.24,
+    dimer_footprint_nm2: float = 35.8,
+    spike_width_nm: float = 11.5,
+    spike_spacing_mode: str = 'average',
+    spike_spacing_min_nm: float = 6.0,
+    spike_spacing_avg_nm: float = 8.0,
+    spike_spacing_max_nm: float = 10.0,
+    ratio: Dict[str, int] = None,
+    oligomeric_states: Dict[str, int] = None,
+    morphology: str = "spherical",
+    virion_length_nm: Optional[float] = None,
+) -> Dict[str, int]:
+    """
+    Return protein copy numbers, either default or biophysically calculated.
+
+    For proteins not covered by the calculation (P, L, M2-1, M2-2), the
+    default values from default_copy_numbers are always used.
+
+    Parameters
+    ----------
+    genome_length : int
+        Viral genome length in nucleotides (needed for N protein calculation).
+    default_copy_numbers : dict
+        Fallback copy numbers (typically HMPV_COPY_NUMBERS from config).
+    use_calculated : bool
+        If True, calculate N, M, F, G, SH from biophysical models.
+        If False (default), return default_copy_numbers unchanged.
+    (remaining parameters are forwarded to the individual calc functions)
+
+    Returns
+    -------
+    dict : Copy numbers for all 9 HMPV proteins.
+    """
+    if not use_calculated:
+        logger.info("Using default copy numbers from config (use_calculated=False).")
+        return dict(default_copy_numbers)
+
+    logger.info("Calculating copy numbers from biophysical models (use_calculated=True).")
+
+    # Start from defaults so P, L, M2-1, M2-2 are always present
+    copy_numbers = dict(default_copy_numbers)
+
+    logger.info(f"Morphology: {morphology}" + (f"  (length={virion_length_nm} nm)" if virion_length_nm else ""))
+
+    # N protein  — genome-stoichiometry based; not surface-area dependent
+    copy_numbers['N'] = calculate_n_copy_number(genome_length, nt_per_protomer, genome_copies)
+
+    # M protein  — surface-area dependent
+    copy_numbers['M'] = calculate_m_copy_number(
+        virion_diameter_nm=virion_diameter_nm,
+        coverage_fraction=coverage_fraction,
+        dimer_footprint_nm2=dimer_footprint_nm2,
+        morphology=morphology,
+        virion_length_nm=virion_length_nm,
+    )
+
+    # Select spike spacing based on mode
+    spacing_map = {
+        'min': spike_spacing_min_nm,
+        'average': spike_spacing_avg_nm,
+        'max': spike_spacing_max_nm,
+    }
+    spike_spacing_nm = spacing_map.get(spike_spacing_mode, spike_spacing_avg_nm)
+    logger.info(f"Spike spacing mode: '{spike_spacing_mode}' → {spike_spacing_nm} nm")
+
+    # F, G, SH proteins  — surface-area dependent
+    glyco = calculate_glycoprotein_copy_numbers(
+        virion_diameter_nm=virion_diameter_nm,
+        spike_width_nm=spike_width_nm,
+        spike_spacing_nm=spike_spacing_nm,
+        ratio=ratio,
+        oligomeric_states=oligomeric_states,
+        morphology=morphology,
+        virion_length_nm=virion_length_nm,
+    )
+    copy_numbers.update(glyco)
+
+    logger.info("Final copy numbers:")
+    for protein, count in copy_numbers.items():
+        logger.info(f"  {protein}: {count}")
+
+    return copy_numbers

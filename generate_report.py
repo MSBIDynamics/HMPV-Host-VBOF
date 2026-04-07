@@ -139,7 +139,7 @@ def create_vbof_composition_chart(vbof_data, fig):
                        'leu__L_c', 'lys__L_c', 'met__L_c', 'phe__L_c', 'pro__L_c',
                        'ser__L_c', 'thr__L_c', 'trp__L_c', 'tyr__L_c', 'val__L_c'],
         'Lipids': ['pc_hs_c', 'pe_hs_c', 'ps_hs_c', 'sphmyln_hs_c', 'chsterol_c'],
-        'Glycans': ['uacgam_c', 'gdpmann_c', 'udpgal_c', 'cmpacna_c', 'gdpfuc_c', 'udpgalfur_c'],
+        'Glycans': ['uacgam_c', 'gdpmann_c', 'udpgal_c', 'cmpacna_c', 'gdpfuc_c', 'M_uacgam_c'],
         'Energy': ['adp_c', 'amp_c', 'gdp_c', 'pi_c', 'h_c']
     }
     

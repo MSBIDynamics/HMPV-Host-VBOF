@@ -6,7 +6,7 @@ This module contains configuration parameters and default values for HMPV VBOF c
 
 Includes:
 - File paths
-- HMPV protein copy numbers (from literature)
+- Default HMPV protein copy numbers
 - Model parameters
 - BiGG ID mappings
 
@@ -29,14 +29,23 @@ DATA_DIR = Path("Data")
 GENOMIC_DIR = DATA_DIR / "genomic"
 PROTEIN_DIR = DATA_DIR / "protein"
 MODEL_DIR = DATA_DIR / "smbl"
-OUTPUT_DIR = Path("output_iHsaEC21")
+OUTPUT_DIR = Path("output_HBEC")  # Output directory for HBEC model
 
 # Default file names
 DEFAULT_GENOME_FILE = "GCF_002815375.1_ASM281537v1_genomic.fna"
 DEFAULT_GFF_FILE = "GCF_002815375.1_ASM281537v1_genomic.gff"
 DEFAULT_PROTEIN_FILE = "GCF_002815375.1_ASM281537v1_protein.faa"
-DEFAULT_HOST_MODEL = "iHsaEC21_clean.xml"  # Clean model without SARS-CoV-2 VBOF
-DEFAULT_HOST_MODEL_ORIGINAL = "iHsaEC21.xml"  # Original model with SARS-CoV-2 VBOF
+DEFAULT_HOST_MODEL = "iHBEC_Recon3D_or.xml"  # iHBEC model with R_biomass_hbec, without SARS-CoV-2 VBOF
+DEFAULT_HOST_MODEL_WITH_SARS = "iHBEC_Recon3D_or.xml"  # Original model with both R_biomass_hbec and R_VBOF (SARS-CoV-2)
+DEFAULT_HOST_MODEL_ORIGINAL = "iHsaEC21.xml"  # Original iHsaEC21 model (alternative)
+
+
+# =============================================================================
+# HOST BOF REACTION PARAMETERS
+# =============================================================================
+
+HOST_BOF_REACTION_ID = "biomass_reaction"
+HOST_BOF_REACTION_NAME = "Human Bronchial Epithelial Cell Biomass"
 
 # =============================================================================
 # OUTPUT FILE NAMES
@@ -52,39 +61,41 @@ INTEGRATION_SUMMARY_FILE = "integration_summary.txt"
 INTEGRATED_MODEL_XML_SUFFIX = "_with_HMPV_VBOF.xml"
 INTEGRATED_MODEL_JSON_SUFFIX = "_with_HMPV_VBOF.json"
 
-# Antiviral analysis output files
-ANTIVIRAL_ANALYSIS_DIR = "antiviral_analysis"
-GENE_KNOCKOUT_RESULTS_FILE = "gene_knockout_results.csv"
-REACTION_KNOCKOUT_RESULTS_FILE = "reaction_knockout_results.csv"
-TOP_GENE_TARGETS_FILE = "top_gene_targets.csv"
-TOP_REACTION_TARGETS_FILE = "top_reaction_targets.csv"
-SUBSYSTEM_ESSENTIALITY_FILE = "subsystem_essentiality.csv"
-ANTIVIRAL_TARGETS_REPORT_FILE = "antiviral_targets_report.txt"
+# Dual-objective analysis output files
+DUAL_OBJECTIVE_ANALYSIS_DIR = "dual_objective_analysis"
+HOST_GROWTH_RESULTS_FILE = "host_growth_knockout_results.csv"
+VIRUS_GROWTH_RESULTS_FILE = "virus_growth_knockout_results.csv"
+MERGED_KNOCKOUT_RESULTS_FILE = "merged_knockout_comparison.csv"
+SELECTIVE_TARGETS_FILE = "selective_antiviral_targets.csv"
+CRITICAL_VIRAL_TARGETS_FILE = "critical_viral_targets.csv"
+COMBINED_OBJECTIVE_RESULTS_FILE = "combined_objective_results.csv"
+DUAL_OBJECTIVE_REPORT_FILE = "dual_objective_report.txt"
+# Reaction knockout files for dual-objective analysis
+HOST_REACTION_KNOCKOUT_RESULTS_FILE = "host_reaction_knockout_results.csv"
+VIRUS_REACTION_KNOCKOUT_RESULTS_FILE = "virus_reaction_knockout_results.csv"
+MERGED_REACTION_KNOCKOUT_RESULTS_FILE = "merged_reaction_knockout_comparison.csv"
+SELECTIVE_REACTION_TARGETS_FILE = "selective_reaction_targets.csv"
+CRITICAL_REACTION_TARGETS_FILE = "critical_reaction_targets.csv"
+REACTION_SUBSYSTEM_ESSENTIALITY_FILE = "reaction_subsystem_essentiality.csv"
+SELECTIVE_TARGETS_FVA_FILE = "selective_targets_fva.csv"
 
-# Sensitivity analysis output files
-SENSITIVITY_ANALYSIS_DIR = "sensitivity_analysis"
-SCENARIO_SUMMARY_FILE = "scenario_summary.csv"
-ROBUST_GENE_TARGETS_FILE = "robust_gene_targets.csv"
-ROBUST_REACTION_TARGETS_FILE = "robust_reaction_targets.csv"
-COMPARISON_REPORT_FILE = "comparison_report.txt"
-COMMON_GENE_TARGETS_FILE = "common_gene_targets.csv"
-COMMON_REACTION_TARGETS_FILE = "common_reaction_targets.csv"
-UNIQUE_TARGETS_FILE = "unique_targets_by_scenario.csv"
-SCENARIO_STATISTICS_FILE = "scenario_statistics.csv"
 
-# Model cleaning output files
-MODEL_CLEANING_REPORT_FILE = "model_cleaning_report.txt"
 
-# Report generation output files
-METABOLIC_MODEL_REPORT_FILE = "HMPV_Metabolic_Model_Report.pdf"
+# Multi-variant comparison output files
+MULTI_VARIANT_COMPARISON_DIR = "multi_variant_comparison"
+VARIANT_COMPARISON_SUMMARY_FILE = "variant_comparison_summary.csv"
+VARIANT_COMPARISON_REPORT_FILE = "variant_comparison_report.txt"
+MERGED_SELECTIVE_GENE_FILE = "merged_selective_gene_targets.csv"
+MERGED_SELECTIVE_RXN_FILE = "merged_selective_rxn_targets.csv"
+MERGED_FVA_FILE = "merged_fva_results.csv"
+
 
 # =============================================================================
 # OUTPUT DIRECTORY PATHS
 # =============================================================================
 
 # Subdirectories in output
-ANTIVIRAL_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / ANTIVIRAL_ANALYSIS_DIR
-SENSITIVITY_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / SENSITIVITY_ANALYSIS_DIR
+DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / DUAL_OBJECTIVE_ANALYSIS_DIR
 
 # =============================================================================
 # FULL FILE PATHS (for convenience)
@@ -94,7 +105,9 @@ SENSITIVITY_ANALYSIS_OUTPUT_DIR = OUTPUT_DIR / SENSITIVITY_ANALYSIS_DIR
 GENOME_FILE_PATH = GENOMIC_DIR / DEFAULT_GENOME_FILE
 GFF_FILE_PATH = GENOMIC_DIR / DEFAULT_GFF_FILE
 PROTEIN_FILE_PATH = PROTEIN_DIR / DEFAULT_PROTEIN_FILE
-HOST_MODEL_CLEAN_PATH = MODEL_DIR / DEFAULT_HOST_MODEL
+HOST_MODEL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL  # Primary model (model_clean.xml)
+HOST_MODEL_CLEAN_PATH = MODEL_DIR / DEFAULT_HOST_MODEL  # Alias for backward compatibility
+HOST_MODEL_WITH_SARS_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_WITH_SARS  # Model with SARS-CoV-2 VBOF
 HOST_MODEL_ORIGINAL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_ORIGINAL
 
 # VBOF output paths
@@ -105,291 +118,157 @@ VBOF_SUMMARY_PATH = OUTPUT_DIR / VBOF_SUMMARY_FILE
 # Integration output paths
 INTEGRATION_SUMMARY_PATH = OUTPUT_DIR / INTEGRATION_SUMMARY_FILE
 
-# Antiviral analysis output paths
-GENE_KNOCKOUT_RESULTS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / GENE_KNOCKOUT_RESULTS_FILE
-REACTION_KNOCKOUT_RESULTS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / REACTION_KNOCKOUT_RESULTS_FILE
-TOP_GENE_TARGETS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / TOP_GENE_TARGETS_FILE
-TOP_REACTION_TARGETS_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / TOP_REACTION_TARGETS_FILE
-SUBSYSTEM_ESSENTIALITY_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / SUBSYSTEM_ESSENTIALITY_FILE
-ANTIVIRAL_TARGETS_REPORT_PATH = ANTIVIRAL_ANALYSIS_OUTPUT_DIR / ANTIVIRAL_TARGETS_REPORT_FILE
+# Dual-objective analysis output paths
+HOST_GROWTH_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / HOST_GROWTH_RESULTS_FILE
+VIRUS_GROWTH_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / VIRUS_GROWTH_RESULTS_FILE
+MERGED_KNOCKOUT_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / MERGED_KNOCKOUT_RESULTS_FILE
+SELECTIVE_TARGETS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / SELECTIVE_TARGETS_FILE
+CRITICAL_VIRAL_TARGETS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / CRITICAL_VIRAL_TARGETS_FILE
+COMBINED_OBJECTIVE_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / COMBINED_OBJECTIVE_RESULTS_FILE
+DUAL_OBJECTIVE_REPORT_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / DUAL_OBJECTIVE_REPORT_FILE
+# Reaction knockout paths for dual-objective analysis
+HOST_REACTION_KNOCKOUT_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / HOST_REACTION_KNOCKOUT_RESULTS_FILE
+VIRUS_REACTION_KNOCKOUT_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / VIRUS_REACTION_KNOCKOUT_RESULTS_FILE
+MERGED_REACTION_KNOCKOUT_RESULTS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / MERGED_REACTION_KNOCKOUT_RESULTS_FILE
+SELECTIVE_REACTION_TARGETS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / SELECTIVE_REACTION_TARGETS_FILE
+CRITICAL_REACTION_TARGETS_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / CRITICAL_REACTION_TARGETS_FILE
+REACTION_SUBSYSTEM_ESSENTIALITY_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / REACTION_SUBSYSTEM_ESSENTIALITY_FILE
+SELECTIVE_TARGETS_FVA_PATH = DUAL_OBJECTIVE_ANALYSIS_OUTPUT_DIR / SELECTIVE_TARGETS_FVA_FILE
 
-# Sensitivity analysis output paths
-SCENARIO_SUMMARY_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / SCENARIO_SUMMARY_FILE
-ROBUST_GENE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / ROBUST_GENE_TARGETS_FILE
-ROBUST_REACTION_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / ROBUST_REACTION_TARGETS_FILE
-COMPARISON_REPORT_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMPARISON_REPORT_FILE
-COMMON_GENE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMMON_GENE_TARGETS_FILE
-COMMON_REACTION_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / COMMON_REACTION_TARGETS_FILE
-UNIQUE_TARGETS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / UNIQUE_TARGETS_FILE
-SCENARIO_STATISTICS_PATH = SENSITIVITY_ANALYSIS_OUTPUT_DIR / SCENARIO_STATISTICS_FILE
-
-# Model cleaning output paths
-MODEL_CLEANING_REPORT_PATH = OUTPUT_DIR / MODEL_CLEANING_REPORT_FILE
-
-# Report generation output paths
-METABOLIC_MODEL_REPORT_PATH = OUTPUT_DIR / METABOLIC_MODEL_REPORT_FILE
 
 
 # =============================================================================
 # HMPV PROTEIN COPY NUMBERS
 # =============================================================================
 
-# Copy numbers per virion for HMPV proteins
-# 
-# IMPORTANT: Some of the values are estimates based on related paramyxoviruses (RSV, PIV)
-# and should be updated with HMPV-specific data when available.
-#
-# =============================================================================
-# SOURCES AND REFERENCES:
-# =============================================================================
-#
-# 1. N PROTEIN - RNA BINDING STOICHIOMETRY:
-#    - Pneumovirus N protein binds ~7 nucleotides of RNA
-#    - Reference: Tawar et al. (2009) "Crystal structure of a nucleocapsid-like 
-#      nucleoprotein-RNA complex of respiratory syncytial virus"
-#      Science 326(5957):1279-83. DOI: 10.1126/science.1177634
-#      https://www.science.org/doi/10.1126/science.1177634
-#    - Calculation: 13,350 nt genome / 7 nt per N ≈ 1,907 copies
-#
-# 2. RSV STRUCTURAL STUDIES (closely related to HMPV):
-#    - Kiss et al. (2014) "Structural Analysis of RSV Reveals the Position of M2-1"
-#      J Virol 88(12):7602-17. DOI: 10.1128/JVI.00256-14
-#      https://journals.asm.org/doi/10.1128/jvi.00256-14
-#    - Provides RSV protein organization estimates
-#
-# 3. PARAMYXOVIRUS STRUCTURAL BIOLOGY:
-#    - Lamb & Parks (2013) "Paramyxoviridae" in Fields Virology, 6th Ed.
-#      Chapter 33, pp. 957-995. Lippincott Williams & Wilkins.
-#
-# 4. HMPV CHARACTERIZATION:
-#    - Peret et al. (2002) "Characterization of Human Metapneumoviruses"
-#      J Infect Dis 185(11):1660-3. DOI: 10.1086/340518
-#      https://pmc.ncbi.nlm.nih.gov/articles/PMC7109943/
-#
-# 5. HMPV DISCOVERY:
-#    - van den Hoogen et al. (2001) "A newly discovered human pneumovirus"
-#      Nat Med 7(6):719-24. DOI: 10.1038/89098
-#      https://www.nature.com/articles/nm0601_719
-#
-# 6. PARAMYXOVIRUS CRYO-EM:
-#    - Ke et al. (2018) "Structure of RSV Fusion Glycoprotein Trimer"
-#      https://www.science.org/doi/10.1126/science.1234914
-#    - F protein trimeric organization (~10-15 nm spacing)
-#
-# TODO: Replace with experimentally determined HMPV-specific values when available
-# =============================================================================
+USE_CALCULATED_COPY_NUMBERS: bool = True
+
+
+N_NUCLEOTIDES_PER_PROTOMER: int = 7    # nucleotides bound per N protomer
+GENOME_COPIES_PER_VIRION: int = 1      # 1 for spherical particles; 2 for filamentous RSV
+
+# --- M protein (geometric surface-area model) ---
+# Source: Kiss et al. (2014)  (RSV cryo-ET, 24% M coverage)
+#       Leyrat et al. (2014) PDB 4LP7 (HMPV M dimer convex-hull footprint)
+M_MEMBRANE_COVERAGE_FRACTION: float = 0.24   # fraction of inner membrane covered by M layer
+M_DIMER_FOOTPRINT_NM2: float = 35.8          # membrane-facing convex-hull area of M dimer (YZ plane, PDB 4LP7)
+
+# --- Glycoproteins F, G, SH (hexagonal spike-packing model) ---
+# Source: Walsh et al. (2015) — RSV spike width/spacing by EM
+#         Conley et al. (2022) — RSV cryo-ET hexagonal arrays
+#         McLellan (2013), Battles (2017) — F trimer; Thammawat (2008) — G monomer
+#         Gan et al. (2012) — RSV SH pentamer (applied by analogy to HMPV SH)
+SPIKE_WIDTH_NM: float = 11.5          # average glycoprotein spike width in nm
+SPIKE_SPACING_MIN_NM: float = 6.0     # minimum inter-spike gap in nm
+SPIKE_SPACING_AVG_NM: float = 8.0     # average inter-spike gap in nm
+SPIKE_SPACING_MAX_NM: float = 10.0    # maximum inter-spike gap in nm
+SPIKE_SPACING_MODE: str = 'average'   # which spacing to use: 'min', 'average', or 'max'
+
+# F:G:SH stoichiometric ratio (based on transcription gradient + functional essentiality)
+# Source: Schildgen et al. (2011) — transcription gradient; Biacchesi et al. (2004)
+GLYCOPROTEIN_RATIO: Dict[str, int] = {'F': 5, 'G': 3, 'SH': 1}
+
+# Oligomeric states per spike (subunits per spike position)
+F_OLIGOMERIC_STATE: int = 3   # homotrimer  (McLellan 2013, Battles 2017)
+G_OLIGOMERIC_STATE: int = 1   # monomer     (Thammawat 2008, Leyrat 2014)
+SH_OLIGOMERIC_STATE: int = 5  # pentamer    (Gan 2012 — RSV SH analogy; Masante 2014)
+
 
 HMPV_COPY_NUMBERS: Dict[str, int] = {
     # Nucleocapsid proteins (encapsidate genome)
     # Calculated: 13,350 nt genome / 7 nt per N protein ≈ 1,907
     # Source: Pneumovirus N-RNA binding stoichiometry
     'N': 1900,    # Nucleoprotein - binds viral RNA genome (calculated)
+   
+    'P': 300,     # From Sendai virus https://pdf.sciencedirectassets.com/272412/1-s2.0-S0042682200X01456/1-s2.0-S0042682296903591/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBQaCXVzLWVhc3QtMSJIMEYCIQDeC0gSA%2BKrEkQOz%2Fe5i5O1zhX%2BmWOYJOpN12Q8H8TSLwIhAIak09xe6DgQF1b%2BuWkD7RaQzm4nZ0do29To21W7lRP1KrwFCN3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBRoMMDU5MDAzNTQ2ODY1Igzdim2X5mUUiy2dhRQqkAV%2Bt8KxqrK0cEG7hjD4b9S832%2F5lmjOfM2rA0BIGoezzFN5fuBREV9Oak%2BXweefm3YnHN08NzdCN%2BnjTr3ok2WcIW1uKxefthb%2FTAkPBQlzP%2FI0oLcBB6gyrQti5vNjHKB8yFeEl1Aax%2B3HdiQ6TCPbXAfbGOoJbaPHohNWdk4QL4UL%2BUKHxVte6scEDGesGXGWMi1NAZ8a5NbqVUX8rzAqHbS0MsKrevc%2FrV3qSYzNktwNS8yh7vjSai9CnIIo8sYHspaIm9uf81FrOkwKXOmC4VXGY2ZsgD3kJLalvzsR50Yi4UO%2BmauK14Uh7DwhYexSCiQD9wQT%2FoM1Ir7f3I3egVPzNu5pdNsOuVhgpNe8U0ZKpmU5%2BFTAVaKTId0G22IQeQwlKxP43m6MGW9yDK9ulvNmXI%2BtPco%2FL6m7o4gpf%2Fs5ZVrENaAXeJgVpIqb3CqpTZfmlM45zZKjqzCtwBtjOTCIAeeyUlX9NsKH6XztP85uxu%2BDtTaxa35mHX%2FewjsacDIDyQiYyFc4%2BRk2A8Lbhe2lTIY1Q1%2F5ZqP1pFh92Z70DT3FbGReHdcx%2Bmt5ktyDffYZAJYHaO5isnH%2FodYp%2BXqBQs0MYMVlgYqfLyWGq7OwydD044588NDvqdNq%2FXTEvHupsuqIh9OYAeQRjRt5ialB6Jfh%2BLmwMoxaoE8j%2FL%2BjaPQph0WuRw9Ss9yEQG8gTBwf5lC0NgV4VMUz8JYzVmNw8P1QuPWyuiyJ461pi5sLwvmYg9arOISdASeF0H1KaqvfzUeSNCmUN1Vx5hk7Q1IxQdumoMIoNn09JlhsVjn5GHEgdnMUJ1i0QcDgJ8ToeVoVS0RA4Xr2JTcDAXILGQu8sb0x9j0OIjXWU9ZoCjDb9tHOBjqwAYTbJnhfYeKmdbpd%2Biy7lgYJ2kV1adTUangv1EmPBhpGxt%2B434z3199lYF7SJSpFgPcOVd13DLxdT1ernanWhduGaxNa7Lp5UW%2FPwQ0yAq6HIZjQAfwW6pcaqMo%2BcRa1%2FmEX4AZ8Q1tVgXaHLflG0HHuUHfQhFWiOC23XtkmoJDOjG%2FdkgSfKENDkuFLKjIpNOlLX8jjh3R4cUcKjlrITRfgRUE%2BRzmCRgD0%2FKGsawVa&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260407T043126Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4UGMCXQD%2F20260407%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c2c0c9b59f16ef8b99e3205f30b4bb3114277a830d5792c6688fd973c334c079&hash=3162b9416debf0885161b80ce2594b9e38b16532a925dc56873a48762f376c79&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0042682296903591&tid=spdf-ecce83ef-2907-4a0c-b173-b1d973d19482&sid=3ad2fd778f23b3454f5bee5514227e4ec730gxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=04015f0a5a57560150&rr=9e864d7a29a2290f&cc=de
+    'L': 50,      # From Sendai virus
     
-    # Polymerase complex
-    # Source: Estimated from RSV/PIV studies
-    # P:L ratio is typically ~10:1 in paramyxoviruses
-    'P': 300,     # Phosphoprotein - polymerase cofactor (reduced)
-    'L': 30,      # RNA polymerase - low copy, high MW enzyme (reduced)
-    
-    # Matrix protein
-    # Forms layer under envelope, abundant
-    # For 200nm particle: surface area ~125,600 nm², with M spacing ~7nm: ~2500-3000
-    # Source: Paramyxovirus structural studies
-    'M': 2000,    # Matrix protein - virion structure (adjusted)
+   
+    'M': 180,    # Matrix protein - virion structure
     
     # Surface glycoproteins (embedded in envelope)
-    # F protein forms trimeric spikes (~10-15 nm apart)
-    # For 200nm particle: ~250-400 F trimers = 750-1200 F monomers
-    # Source: Cryo-EM studies of paramyxoviruses
-    'F': 350,     # Fusion protein - trimeric spikes (adjusted)
-    'G': 250,     # Attachment glycoprotein (variable, can be absent)
-    'SH': 50,     # Small hydrophobic protein (viroporin, minor)
+   
+    'F': 693,     # Fusion protein - trimeric spikes 
+    'G': 139,     # Attachment glycoprotein - monomeric spikes
+    'SH': 230,    
     
     # M2 proteins (regulatory, internal)
     # Source: Estimated, lower abundance
-    'M2-1': 100,  # Matrix protein 2-1 - transcription factor (reduced)
-    'M2-2': 30,   # Matrix protein 2-2 - regulatory (reduced)
+    'M2-1': 200, 
+    'M2-2': 50,  
 }
 
-# Alternative conservative estimates (lower bound)
-HMPV_COPY_NUMBERS_CONSERVATIVE: Dict[str, int] = {
-    'N': 1400,    # Lower estimate
-    'P': 200,
-    'L': 20,
-    'M': 1500,
-    'F': 250,
-    'G': 150,
-    'SH': 30,
-    'M2-1': 50,
-    'M2-2': 20,
-}
-
-# Confidence levels for copy numbers
-# HIGH: Direct HMPV experimental data or calculated from known stoichiometry
-# MEDIUM: Extrapolated from closely related viruses (RSV)
-# LOW: Rough estimates, need experimental validation
-COPY_NUMBER_CONFIDENCE: Dict[str, str] = {
-    'N': 'HIGH',      # Calculated from genome length / 7 nt per N protein
-    'P': 'LOW',       # Estimated from P:L ratio
-    'L': 'MEDIUM',    # Based on paramyxovirus studies
-    'M': 'MEDIUM',    # Based on RSV and surface area calculation
-    'F': 'MEDIUM',    # Based on cryo-EM of related viruses
-    'G': 'LOW',       # Variable, HMPV can replicate without G
-    'SH': 'LOW',      # Poorly characterized, minor protein
-    'M2-1': 'LOW',    # Estimated
-    'M2-2': 'LOW',    # Estimated
-}
-
-# Key structural references with URLs
-STRUCTURAL_REFERENCES = {
-    'peret_2002': {
-        'title': 'Characterization of Human Metapneumoviruses Isolated from Patients in North America',
-        'journal': 'J Infect Dis',
-        'year': 2002,
-        'pmcid': 'PMC7109943',
-        'doi': '10.1086/340518',
-        'url': 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7109943/',
-        'key_findings': [
-            'HMPV particles are pleomorphic',
-            'Two main genetic lineages (A and B)',
-            'F gene conserved, G gene variable',
-            'EM shows nucleocapsid and filamentous particles'
-        ]
-    },
-    'van_den_hoogen_2001': {
-        'title': 'A newly discovered human pneumovirus isolated from young children with respiratory tract disease',
-        'journal': 'Nat Med',
-        'year': 2001,
-        'doi': '10.1038/89098',
-        'url': 'https://www.nature.com/articles/nm0601_719',
-        'key_findings': [
-            'Original HMPV discovery',
-            'Paramyxovirus-like structure',
-            'Genome ~13 kb'
-        ]
-    },
-    'tawar_2009': {
-        'title': 'Crystal structure of a nucleocapsid-like nucleoprotein-RNA complex of RSV',
-        'journal': 'Science',
-        'year': 2009,
-        'doi': '10.1126/science.1177634',
-        'url': 'https://www.science.org/doi/10.1126/science.1177634',
-        'key_findings': [
-            'N protein binds 7 nucleotides of RNA',
-            'Basis for N protein copy number calculation'
-        ]
-    },
-    'kiss_2014': {
-        'title': 'Structural Analysis of RSV Reveals the Position of M2-1',
-        'journal': 'J Virol',
-        'year': 2014,
-        'doi': '10.1128/JVI.jvi.00256-14',
-        'url': 'https://journals.asm.org/doi/10.1128/jvi.00256-14',
-        'key_findings': [
-            'RSV virion protein organization',
-            'Matrix and M2-1 protein distribution'
-        ]
-    },
-    'ke_2018': {
-        'title': 'Structure of RSV Fusion Glycoprotein Trimer',
-        'journal': 'Science',
-        'year': 2018,
-        'doi': '10.1126/science.1234914',
-        'url': 'https://www.science.org/doi/10.1126/science.1234914',
-        'key_findings': [
-            'F protein trimeric structure',
-            'Spike distribution on virion surface'
-        ]
-    }
-}
-
-# =============================================================================
-# LIPID COMPOSITION SOURCES
-# =============================================================================
-#
-# Lipid composition for HMPV envelope (derived from host plasma membrane)
-#
-# SOURCES AND REFERENCES:
-#
-# 1. PARAMYXOVIRUS ENVELOPE COMPOSITION:
-#    - Jinjun Shan. (2028) "High-resolution lipidomics reveals dysregulation of lipid metabolism"
-#      https://pubs.rsc.org/en/content/articlelanding/2018/ra/c8ra05640d
-#
-# 2. VIRAL ENVELOPE LIPID RATIOS:
-#    - Brügger et al. (2006) "The HIV lipidome"
-#      https://pmc.ncbi.nlm.nih.gov/articles/PMC1413831/
-#    - General principles of viral envelope composition
-#
-# 3. MEMBRANE LIPID PACKING:
-#    - Nagle & Tristram-Nagle (2000) "Structure of lipid bilayers"
-#      Biochim Biophys Acta 1469(3):159-195. DOI: 10.1016/S0304-4157(00)00016-2
-#      https://www.sciencedirect.com/science/article/pii/S0304415700000162
-#    - Lipid packing density: ~0.65 nm² per lipid molecule
-#
-# 4. SARS-CoV-2 VBOF METHODOLOGY (applied to HMPV):
-#    - Aller et al. (2018) "Integrated human-virus metabolic stoichiometric modelling"
-#      https://pmc.ncbi.nlm.nih.gov/articles/PMC6170780/
-#
-# Lipid fractions (based on paramyxovirus/plasma membrane data):
-LIPID_COMPOSITION = {
-    'pc_hs': {
-        'name': 'Phosphatidylcholine',
-        'fraction': 0.45,
-        'bigg_id': 'pc_hs_c',
-        'note': 'Major phospholipid in plasma membrane'
-    },
-    'pe_hs': {
-        'name': 'Phosphatidylethanolamine',
-        'fraction': 0.25,
-        'bigg_id': 'pe_hs_c',
-        'note': 'Second most abundant phospholipid'
-    },
-    'ps_hs': {
-        'name': 'Phosphatidylserine',
-        'fraction': 0.05,
-        'bigg_id': 'ps_hs_c',
-        'note': 'Minor component, inner leaflet'
-    },
-    'sphmyln_hs': {
-        'name': 'Sphingomyelin',
-        'fraction': 0.15,
-        'bigg_id': 'sphmyln_hs_c',
-        'note': 'Sphingolipid component'
-    },
-    'chsterol': {
-        'name': 'Cholesterol',
-        'fraction': 0.10,
-        'bigg_id': 'chsterol_c',
-        'note': 'Essential for membrane fluidity'
-    }
-}
 
 # Lipid packing density (nm² per lipid molecule in bilayer)
 # Source: Nagle & Tristram-Nagle (2000) Biochim Biophys Acta
 # Source 2: Molecular models for drug permeation across phospholipid membranes
 # URL: https://docserv.uni-duesseldorf.de/servlets/DerivateServlet/Derivate-2600/600.pdf
-LIPID_PACKING_DENSITY_NM2 = 0.65
+LIPID_PACKING_DENSITY_NM2: float = 0.65
+
+# Lipid composition fractions (must sum to ≤ 1.0)
+# Source: Barnes et al. (1987) — Sendai virus 
+LIPID_FRACTIONS: Dict[str, float] = {
+    'pchol_hs_c':   0.1865,   # Phosphatidylcholine       (18.65%)
+    'pe_hs_c':      0.1340,   # Phosphatidylethanolamine  (13.40%)
+    'ps_hs_c':      0.0600,   # Phosphatidylserine        ( 6.00%)
+    'sphmyln_hs_c': 0.0440,   # Sphingomyelin             ( 4.40%)
+    'clpn_hs_c':    0.0450,   # Cardiolipin               ( 4.50%)
+    'pail_hs_c':    0.0275,   # Phosphatidylinositol      ( 2.75%)
+    'lpe_hs_c':     0.0080,   # Lysophosphatidylethanolamine ( 0.80%)
+    'chsterol_c':   0.9000,   # Cholesterol               (50.00%)
+}
 
 
 # =============================================================================
 # VIRION PARAMETERS
 # =============================================================================
 
-# HMPV virion dimensions
-# IMPORTANT: HMPV is PLEOMORPHIC (variable shape) - can be:
-#   - Spherical particles: 150-300 nm
-#   - Filamentous particles: up to 600 nm length
-#
-# Reference: "Characterization of Human Metapneumoviruses Isolated from 
-#            Patients in North America" - PMC7109943
-#
-# For VBOF calculations, we use a representative spherical particle
-VIRION_DIAMETER_NM = 200.0  # Representative diameter in nanometers 
+VIRION_DIAMETER_NM = 209.0  # Default representative diameter (nm)
 VIRION_DIAMETER_RANGE = (150.0, 600.0)  # Full range observed (pleomorphic)
 VIRION_DIAMETER_SPHERICAL_TYPICAL = (150.0, 300.0)  # Typical spherical range
 
 # Virion morphology note
 VIRION_MORPHOLOGY = "pleomorphic"  # Can be spherical or filamentous
+
+FILAMENTOUS_DIAMETER_NM: float = 120.0   # tube cross-section diameter (nm)
+FILAMENTOUS_LENGTH_NM:   float = 600.0   # total tip-to-tip length (nm)
+
+
+# =============================================================================
+# GLYCAN PARAMETERS
+# =============================================================================
+#
+
+F_PROTEIN_N_LINKED_SITES: int = 3         # sites N57, N172, N353 — all utilized
+F_PROTEIN_SITE_UTILIZATION: float = 1.0   # 100 % occupancy confirmed
+
+G_PROTEIN_N_LINKED_SITES: int = 4         # average across genotypes (range 2–5)
+G_PROTEIN_N_LINKED_UTILIZATION: float = 0.8   # ~80 % occupancy
+G_PROTEIN_O_LINKED_SITES: int = 26        # conservative estimate of occupied sites
+G_PROTEIN_O_LINKED_UTILIZATION: float = 1.0  # ~50 % of potential Ser/Thr sites
+
+N_GLYCAN_COMPLEX_COMPOSITION: Dict[str, int] = {
+    'GlcNAc':  4,   # 2 core + 2 antennae
+    'Man':     3,   # core trimannose
+    'Gal':     2,   # terminal galactose on each antenna
+    'Neu5Ac':  2,   # sialic acid caps
+    'Fuc':     1,   # core fucose
+}
+N_LINKED_GLYCAN_HIGH_MANNOSE = {
+        'GlcNAc': 2,    # Core chitobiose
+        'Man': 9,       # High-mannose
+}
+# O-linked glycan monosaccharide composition — Core 1 sialyl-T antigen (mucin-type)
+
+O_GLYCAN_CORE1_COMPOSITION: Dict[str, int] = {
+    'GalNAc':  1,   # N-acetylgalactosamine (linked to Ser/Thr)
+    'Gal':     1,   # galactose
+    'Neu5Ac':  1,   # sialic acid cap
+}
+
+# ATP cost per glycosidic bond formation
+GLYCOSYLATION_ATP_PER_N_GLYCAN: int = 2   # per N-glycan (OST reaction)
+GLYCOSYLATION_ATP_PER_O_GLYCAN: int = 1   # per O-glycan (GalNAc-T reaction)
 
 
 # =============================================================================
@@ -399,6 +278,81 @@ VIRION_MORPHOLOGY = "pleomorphic"  # Can be spherical or filamentous
 VBOF_REACTION_ID = "HMPV_VBOF"
 VBOF_REACTION_NAME = "Human Metapneumovirus Biomass Objective Function"
 VBOF_SUBSYSTEM = "Viral Replication"
+
+
+
+# =============================================================================
+# VIRION DIAMETER VARIANTS  (for multi-variant pipeline)
+# =============================================================================
+#
+
+VIRION_DIAMETER_VARIANTS: Dict[str, Dict] = {
+    "spherical_small": {
+        "morphology":    "spherical",
+        "diameter_nm":   150.0,
+        "length_nm":     None,
+        "genome_copies": 1,
+    },
+    "spherical_typical": {
+        "morphology":    "spherical",
+        "diameter_nm":   209.0,
+        "length_nm":     None,
+        "genome_copies": 1,
+    },
+    "spherical_large": {
+        "morphology":    "spherical",
+        "diameter_nm":   300.0,
+        "length_nm":     None,
+        "genome_copies": 1,
+    },
+    "filamentous_small": {
+        "morphology":    "filamentous",
+        "diameter_nm":   45,   
+        "length_nm":     200,      
+        "genome_copies": 1,    
+    },
+    "filamentous_medium": {
+        "morphology":    "filamentous",
+        "diameter_nm":   62,  
+        "length_nm":     282,      
+        "genome_copies": 1,    
+    },
+    "filamentous_large": {
+        "morphology":    "filamentous",
+        "diameter_nm":   120,  
+        "length_nm":     600,      
+        "genome_copies": 1,    
+    },
+}
+
+
+# =============================================================================
+# DUAL-OBJECTIVE ANALYSIS PARAMETERS
+# =============================================================================
+
+# Default threshold configurations for target classification
+# Values are expressed as fractions (0-1), where 1.0 = 100% of wild-type flux
+DEFAULT_THRESHOLDS: Dict[str, Dict[str, float]] = {
+    # Selective target: significantly hurts virus while sparing host
+    'selective_target': {
+        'virus_max': 0.5,   # Virus growth drops below 50%
+        'host_min': 0.8     # Host growth stays above 80%
+    },
+    # Strict selective target: strong effect on virus, minimal effect on host
+    'strict_selective': {
+        'virus_max': 0.1,   # Virus growth drops below 10%
+        'host_min': 0.9     # Host growth stays above 90%
+    },
+    # Lethal to virus: critical for virus survival
+    'lethal_virus': {
+        'virus_max': 0.05   # Virus growth drops below 5% (almost zero)
+    }
+}
+
+# Classification thresholds for impact assessment
+ESSENTIALITY_THRESHOLD = 0.01      # < 1% of max flux = lethal
+SIGNIFICANT_THRESHOLD = 0.5         # < 50% of max flux = significant
+MODERATE_THRESHOLD = 0.9            # < 90% of max flux = moderate
 
 
 # =============================================================================
@@ -451,6 +405,69 @@ COMMON_METABOLITE_IDS = {
     'h': 'h_c',
 }
 
+GLYCAN_PRECURSOR_BIGG_IDS: Dict[str, str] = {
+    'GlcNAc':  'uacgam_c',    # UDP-N-acetyl-D-glucosamine
+    'Man':     'gdpmann_c',   # GDP-mannose
+    'Gal':     'udpgal_c',    # UDP-galactose
+    'Fuc':     'gdpfuc_c',    # GDP-fucose (cytosol)
+    'Neu5Ac':  'cmpacna_c',   # CMP-N-acetylneuraminate (sialic acid)
+    'GalNAc':  'uacgam_c',  # UDP-N-acetyl-D-galactosamine
+}
+
+# Molecular weights (g/mol) for all VBOF metabolites
+METABOLITE_MOLECULAR_WEIGHTS: Dict[str, float] = {
+    # Genome nucleotides
+    'atp_c': 507.18,
+    'gtp_c': 523.18,
+    'ctp_c': 483.16,
+    'utp_c': 484.14,
+    # Amino acids (all 20 standard)
+    'ala__L_c': 89.09,
+    'arg__L_c': 174.20,
+    'asn__L_c': 132.12,
+    'asp__L_c': 133.10,
+    'cys__L_c': 121.16,
+    'glu__L_c': 147.13,
+    'gln__L_c': 146.15,
+    'gly_c':    75.07,
+    'his__L_c': 155.16,
+    'ile__L_c': 131.17,
+    'leu__L_c': 131.17,
+    'lys__L_c': 146.19,
+    'met__L_c': 149.21,
+    'phe__L_c': 165.19,
+    'pro__L_c': 115.13,
+    'ser__L_c': 105.09,
+    'thr__L_c': 119.12,
+    'trp__L_c': 204.23,
+    'tyr__L_c': 181.19,
+    'val__L_c': 117.15,
+    # Lipids 
+    'pchol_hs_c':   760.0,    # Phosphatidylcholine
+    'pe_hs_c':      720.0,    # Phosphatidylethanolamine
+    'ps_hs_c':      780.0,    # Phosphatidylserine
+    'sphmyln_hs_c': 730.0,    # Sphingomyelin
+    'chsterol_c':   386.65,   # Cholesterol
+    'clpn_hs_c':    1448.0,   # Cardiolipin
+    'pail_hs_c':    878.0,    # Phosphatidylinositol
+    'lpe_hs_c':     479.0,    # Lysophosphatidylethanolamine
+    # Glycan precursors
+    'uacgam_c':   607.35,   # UDP-N-acetylglucosamine
+    'gdpmann_c':  605.34,   # GDP-mannose
+    'udpgal_c':   566.30,   # UDP-galactose
+    'cmpacna_c':  614.39,   # CMP-N-acetylneuraminic acid (sialic acid)
+    'gdpfuc_c':   589.33,   # GDP-fucose
+    'M_uacgam_c': 607.35,   # UDP-N-acetylgalactosamine
+}
+
+# Metabolites physically incorporated into the virion (used for mass calculations).
+STRUCTURAL_METABOLITES: set = (
+    set(AMINO_ACID_BIGG_IDS.values())           # all 20 amino acids
+    | set(LIPID_FRACTIONS.keys())               # all lipid envelope species
+    | set(GLYCAN_PRECURSOR_BIGG_IDS.values())   # all glycan precursors
+    | {NUCLEOTIDE_BIGG_IDS['C'], NUCLEOTIDE_BIGG_IDS['U']}  # genome C and U only
+)
+
 
 # =============================================================================
 # LOGGING CONFIGURATION
@@ -491,8 +508,7 @@ def print_configuration():
     
     logger.info("\nProtein Copy Numbers:")
     for protein, count in HMPV_COPY_NUMBERS.items():
-        confidence = COPY_NUMBER_CONFIDENCE.get(protein, 'UNKNOWN')
-        logger.info(f"  {protein}: {count} (confidence: {confidence})")
+        logger.info(f"  {protein}: {count}")
     
     logger.info(f"\nVirion Parameters:")
     logger.info(f"  Diameter: {VIRION_DIAMETER_NM} nm")

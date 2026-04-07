@@ -3,7 +3,12 @@
 HMPV Model Integration Script
 =============================
 
-This script integrates the HMPV VBOF into the host metabolic model (iHsaEC21.xml).
+This script integrates the HMPV VBOF into the host metabolic model.
+
+Supported Host Models:
+----------------------
+- model_clean.xml: iHBEC model with R_biomass_hbec (default)
+- iHsaEC21_clean.xml: Human airway epithelial cell model (alternative)
 
 Usage:
 ------
@@ -11,13 +16,13 @@ Usage:
 
 Input:
 ------
-    - output/hmpv_vbof.json: VBOF stoichiometry from build_vbof.py
-    - Data/smbl/iHsaEC21.xml: Host metabolic model
+    - output_HBEC/hmpv_vbof_normalized.json: VBOF stoichiometry from build_vbof.py
+    - Data/smbl/model_clean.xml: Host metabolic model (iHBEC)
 
 Output:
 -------
-    - output/Model_with_HMPV_VBOF.xml: Integrated model
-    - output/integration_summary.txt: Integration summary
+    - output_HBEC/{model_id}_with_HMPV_VBOF.xml: Integrated model
+    - output_HBEC/integration_summary.txt: Integration summary
     - Console output with validation results
 
 Author: Syed Mushahid Hussain

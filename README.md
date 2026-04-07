@@ -3,15 +3,16 @@
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
-2. [Project Structure](#project-structure)
-3. [Installation](#installation)
-4. [Quick Start](#quick-start)
-5. [Workflow Pipeline](#workflow-pipeline)
-6. [Module Documentation](#module-documentation)
-7. [Output Files](#output-files)
-8. [Sensitivity Analysis](#sensitivity-analysis)
-9. [Configuration](#configuration)
-10. [References](#references)
+2. [Key Research Findings](#key-research-findings)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Quick Start](#quick-start)
+6. [Workflow Pipeline](#workflow-pipeline)
+7. [Module Documentation](#module-documentation)
+8. [Output Files](#output-files)
+9. [Sensitivity Analysis](#sensitivity-analysis)
+10. [Configuration](#configuration)
+11. [References](#references)
 
 ---
 
@@ -22,8 +23,9 @@ This project constructs a **Viral Biomass Objective Function (VBOF)** for **Huma
 ### Key Features
 
 - **Modular VBOF Construction**: Builds VBOF from genome and protein sequences
-- **Host Model Integration**: Integrates VBOF with human metabolic models (iHsaEC21)
-- **Antiviral Target Identification**: Identifies essential host genes and reactions for viral replication
+- **Host Model Integration**: Integrates VBOF with human metabolic models (HBEC)
+- **Dual-Objective Knockout Analysis**: Novel approach evaluating both host viability AND viral production
+- **Selective Target Identification**: Identifies targets that kill virus while sparing host cells
 - **Sensitivity Analysis**: Tests robustness of targets across different VBOF parameter combinations
 - **Comprehensive Documentation**: Well-documented code following PEP8 standards
 
@@ -35,6 +37,54 @@ The VBOF represents the stoichiometric requirements for producing one HMPV virio
 - **Lipids**: Envelope lipid composition (phospholipids, cholesterol, sphingomyelin)
 - **Glycans**: N-linked and O-linked glycosylation requirements
 - **Energy**: ATP/GTP costs for replication and translation
+
+---
+
+## Key Research Findings
+
+### Primary Discovery: Two Highly Selective Antiviral Targets
+
+Our dual-objective knockout analysis of 1,390 host genes identified **two ideal drug targets**:
+
+| Gene | Protein | Host Growth | Virus Growth | Selectivity Score |
+|------|---------|-------------|--------------|-------------------|
+| **PGM3** | Phosphoglucomutase 3 | 100% | 0% | **100.0** (perfect) |
+| **GNPNAT1** | Glucosamine-phosphate N-acetyltransferase 1 | 100% | 2.6% | **97.4** |
+
+### Target Pathway: Hexosamine Biosynthesis
+
+Both targets catalyze sequential reactions in the **hexosamine biosynthesis pathway (HBP)**, which produces UDP-N-acetylglucosamine (UDP-GlcNAc) - the essential donor for glycosylation of viral F and G surface proteins.
+
+```
+Glucose-6-P → Fructose-6-P → Glucosamine-6-P
+                                    ↓ GNPNAT1 ★
+                              N-Acetylglucosamine-6-P
+                                    ↓ PGM3 ★
+                              N-Acetylglucosamine-1-P
+                                    ↓
+                              UDP-N-Acetylglucosamine
+                                    ↓
+                              Viral Glycoprotein Glycosylation
+```
+
+### Why This Works
+
+- **HMPV requires ~13,300 glycosylation events per virion** (F and G proteins)
+- **Host cells tolerate HBP disruption** due to lower steady-state demands and glycan recycling
+- **Viral production creates acute metabolic bottleneck** at HBP that exceeds host capacity
+
+### Complete Analysis Summary
+
+| Metric | Value |
+|--------|-------|
+| Genes tested | 1,390 |
+| Reactions tested | 1,769 |
+| Selective gene targets | 2 |
+| Selective reaction targets | 7 |
+| Critical viral targets | 29 genes, 58 reactions |
+| VBOF baseline flux | 8.68 virions/cell/h |
+
+For detailed findings, see [RESEARCH_PAPER.md](RESEARCH_PAPER.md) and [RESEARCH_HIGHLIGHTS.md](RESEARCH_HIGHLIGHTS.md)
 
 ---
 
@@ -303,7 +353,80 @@ python vbof_sensitivity_analysis.py
 
 ---
 
-## Module Documentation
+### 6. Dual-Objective Analysis (`dual_objective_analysis.py`)
+
+**Purpose**: Identifies selective antiviral drug targets by comparing host growth (BOF) vs virus production (VBOF) for each gene knockout. This is the **key methodological innovation** of this project.
+
+**Why Dual-Objective?**
+Previous metabolic modeling studies evaluated only viral production knockouts. This approach cannot distinguish:
+- Targets that kill both virus AND host (toxic)
+- Targets that kill virus but spare host (selective - ideal drug targets)
+
+Our dual-objective framework solves this by evaluating each knockout under BOTH objectives.
+
+**What it does**:
+- Loads integrated model (host + HMPV VBOF)
+- Runs gene knockouts with host BOF as objective → measures impact on host growth
+- Runs gene knockouts with VBOF as objective → measures impact on virus production
+- Runs reaction knockouts with both objectives
+- Calculates selectivity scores: `Selectivity = Host Growth % - Virus Growth %`
+- Classifies targets into five categories
+- Generates comprehensive reports with pathway analysis
+
+**Output** (in `output_HBEC/dual_objective_analysis/`):
+
+*Gene-level analysis:*
+- `host_growth_knockout_results.csv`: All 1,390 gene knockouts with host BOF objective
+- `virus_growth_knockout_results.csv`: All gene knockouts with VBOF objective
+- `merged_knockout_comparison.csv`: Combined comparison table
+- `selective_antiviral_targets.csv`: **Key result**: 2 selective targets (PGM3, GNPNAT1)
+- `critical_viral_targets.csv`: 29 critical viral targets
+
+*Reaction-level analysis:*
+- `host_reaction_knockout_results.csv`: All 1,769 reaction knockouts (host objective)
+- `virus_reaction_knockout_results.csv`: Reaction knockouts (virus objective)
+- `merged_reaction_knockout_comparison.csv`: Combined reaction comparison
+- `selective_reaction_targets.csv`: **Key result**: 7 selective reaction targets
+- `critical_reaction_targets.csv`: 58 critical viral reactions
+- `reaction_subsystem_essentiality.csv`: Pathway-level analysis
+
+*Report:*
+- `dual_objective_report.txt`: Comprehensive human-readable report
+
+**Usage**:
+```bash
+# Default analysis (virus <50%, host >80%)
+python dual_objective_analysis.py
+
+# Strict thresholds (virus <10%, host >90%)
+python dual_objective_analysis.py --virus-max 10 --host-min 90
+
+# With combined objective analysis
+python dual_objective_analysis.py --combined --bof-weight 0.9 --vbof-weight 0.1
+```
+
+**Command-Line Options**:
+- `--virus-max FLOAT`: Maximum virus growth % for selective targets (default: 50)
+- `--host-min FLOAT`: Minimum host growth % for selective targets (default: 80)
+- `--critical FLOAT`: Maximum virus growth % for critical targets (default: 5)
+- `--combined`: Run combined objective analysis
+- `--bof-weight FLOAT`: BOF weight for combined analysis (default: 0.9)
+- `--vbof-weight FLOAT`: VBOF weight for combined analysis (default: 0.1)
+
+**Target Classification**:
+
+| Classification | Virus Growth | Host Growth | Interpretation |
+|----------------|--------------|-------------|----------------|
+| **HIGH_CONFIDENCE_TARGET** | <10% | >90% | Ideal drug targets |
+| **SELECTIVE_TARGET** | <50% | >80% | Good drug candidates |
+| **CRITICAL_VIRAL_TARGET** | <5% | Any | Essential for virus (may affect host) |
+| **NON_SELECTIVE_TOXIC** | <50% | <80% | Would harm host |
+| **NOT_A_TARGET** | >50% | Any | Minimal effect on virus |
+
+**Key Results from Our Analysis**:
+- **2 Selective Gene Targets**: PGM3 (selectivity: 100.0), GNPNAT1 (selectivity: 97.4)
+- **7 Selective Reaction Targets**: UAGDP, ACGAMPM, GK1, ACGAM6PS, GF6PTA, METAT, AHCi
+- **Target Pathway**: Hexosamine biosynthesis (UDP-GlcNAc synthesis)
 
 ### Core Modules (`src/`)
 
@@ -479,7 +602,7 @@ python generate_report.py
 
 ## Output Files
 
-### VBOF Files
+### VBOF Files (in `output_HBEC/`)
 
 - **`hmpv_vbof.json`**: Raw VBOF with molecule counts
 - **`hmpv_vbof_normalized.json`**: Normalized VBOF for FBA
@@ -487,18 +610,44 @@ python generate_report.py
 
 ### Integrated Model
 
-- **`iHsaEC21_CLEAN_with_HMPV_VBOF.xml`**: SBML file with integrated VBOF
+- **`_with_HMPV_VBOF.xml`**: SBML file with integrated VBOF
 
-### Antiviral Analysis
+### Dual-Objective Analysis (in `output_HBEC/dual_objective_analysis/`)
 
-- **`gene_knockout_results.csv`**: All gene knockouts with impact scores
-- **`reaction_knockout_results.csv`**: All reaction knockouts with impact scores
-- **`top_gene_targets.csv`**: Top-ranked gene targets (lethal + significant)
-- **`top_reaction_targets.csv`**: Top-ranked reaction targets
-- **`subsystem_essentiality.csv`**: Subsystem-level essentiality analysis
-- **`antiviral_targets_report.txt`**: Comprehensive text report
+**Gene-Level Results:**
+- **`host_growth_knockout_results.csv`**: 1,390 gene knockouts (host objective)
+- **`virus_growth_knockout_results.csv`**: 1,390 gene knockouts (virus objective)
+- **`merged_knockout_comparison.csv`**: Combined comparison with selectivity scores
+- **`selective_antiviral_targets.csv`**: **KEY RESULT** - 2 selective targets
+- **`critical_viral_targets.csv`**: 29 critical viral targets
 
-### Sensitivity Analysis
+**Reaction-Level Results:**
+- **`host_reaction_knockout_results.csv`**: 1,769 reaction knockouts (host objective)
+- **`virus_reaction_knockout_results.csv`**: Reaction knockouts (virus objective)
+- **`merged_reaction_knockout_comparison.csv`**: Combined reaction comparison
+- **`selective_reaction_targets.csv`**: **KEY RESULT** - 7 selective reaction targets
+- **`critical_reaction_targets.csv`**: 58 critical viral reactions
+- **`reaction_subsystem_essentiality.csv`**: Pathway-level analysis
+
+**Reports:**
+- **`dual_objective_report.txt`**: Comprehensive analysis report
+
+### Figures (in `output_HBEC/figures/`)
+
+- **`figure1_genome_map.png/svg`**: HMPV genome organization
+- **`figure2_vbof_composition.png/svg`**: VBOF metabolite composition
+- **`figure3_protein_copy_numbers.png/svg`**: Protein copy numbers per virion
+- **`figure4_dual_objective_scatter.png/svg`**: Host vs virus growth scatter plot
+- **`figure5_antiviral_targets.png/svg`**: Selective target visualization
+- **`figure7_venn_diagram.png/svg`**: Target overlap analysis
+- **`figure8_workflow.png/svg`**: Computational pipeline
+
+### Research Documents (in project root)
+
+- **`RESEARCH_PAPER.md`**: Complete research manuscript
+- **`RESEARCH_HIGHLIGHTS.md`**: Key findings summary
+
+### Sensitivity Analysis (if run)
 
 - **`scenario_summary.csv`**: Summary of all parameter combinations
 - **`robust_gene_targets.csv`**: Genes ranked by robustness score
@@ -658,13 +807,22 @@ For questions or issues, please refer to the documentation or check the code com
 
 ## Version History
 
-- **v2.0.0**:
+- **v3.0.0** (February 2026):
+  - **NEW**: Dual-objective knockout analysis framework
+  - **NEW**: Selective antiviral target identification (PGM3, GNPNAT1)
+  - **NEW**: Reaction-level knockout analysis
+  - **NEW**: Comprehensive research paper and highlights
+  - **NEW**: Figure generation pipeline
+  - Integration with HBEC metabolic model
+  - Improved target classification system
+
+- **v2.0.0** (December 2025):
   - VBOF construction pipeline
   - Model integration
-  - Antiviral target analysis
+  - Single-objective antiviral target analysis
   - Sensitivity analysis
 
 ---
 
-*Last updated: December 2025*
+*Last updated: February 2026*
 
