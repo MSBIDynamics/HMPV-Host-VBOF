@@ -29,8 +29,11 @@ def calculate_lipid_stoichiometry(
     """
     Calculate lipid requirements for the viral envelope.
 
-    For HMPV (enveloped paramyxovirus):
+    For HMPV:
     - Envelope derived from host plasma membrane
+    - Average diameter 209 nm
+    - Spherical or filamentous morphology (variable)
+    - 2 leaflets of lipid bilayer, each with avg ~0.65 nm² per lipid molecule
     - Typical composition similar to other paramyxoviruses
 
     Parameters:
@@ -48,36 +51,13 @@ def calculate_lipid_stoichiometry(
     --------
     dict : Lipid stoichiometry (negative = consumption)
 
-    Note:
-    -----
-    HMPV can be pleomorphic (variable shape), so this is an approximation
-    based on spherical geometry.
 
-    Lipid composition based on paramyxovirus literature:
-    - Phosphatidylcholine (PC): ~45%
-    - Phosphatidylethanolamine (PE): ~25%
-    - Phosphatidylserine (PS): ~5%
-    - Sphingomyelin (SM): ~15%
-    - Cholesterol: ~10%
+   
 
     Sources:
     --------
-    1. Jinjun Shan. (2018) "High-resolution lipidomics reveals dysregulation of lipid metabolism"
-       https://pubs.rsc.org/en/content/articlelanding/2018/ra/c8ra05640d
 
-    2. Brügger et al. (2006) "The HIV lipidome"
-       https://pmc.ncbi.nlm.nih.gov/articles/PMC1413831/
-
-    3. Nagle & Tristram-Nagle (2000) "Structure of lipid bilayers"
-       Biochim Biophys Acta 1469(3):159-195. DOI: 10.1016/S0304-4157(00)00016-2
-       https://www.sciencedirect.com/science/article/pii/S0304415700000162
-       - Lipid packing density: ~0.65 nm² per lipid molecule
-
-    4. Aller et al. (2018) "Integrated human-virus metabolic stoichiometric modelling"
-       https://pmc.ncbi.nlm.nih.gov/articles/PMC6170780/
-       - VBOF methodology for enveloped viruses
-
-    5. Characterization of the phospholipid and fatty acid composition of Sendai virus.
+    Characterization of the phospholipid and fatty acid composition of Sendai virus.
 	Barnes, J A and Pehowich, D J and Allen, T M. (1987) Journal of Lipid Research 28(2):130-137. DOI: 10.1016/S0022-2275(20)38714-9
 	https://www.sciencedirect.com/science/article/pii/S0022227520387149
 	- Sendai virus lipid composition
@@ -94,20 +74,20 @@ def calculate_lipid_stoichiometry(
         logger.info("Lipid stoichiometry skipped (include_lipids=False)")
         return {}
 
-    # Surface area — morphology-aware (spherical or filamentous capsule)
+    # Surface area  (spherical or filamentous capsule)
     surface_area_nm2 = calculate_virion_surface_area(
         morphology=morphology,
         diameter_nm=virion_diameter_nm,
         length_nm=virion_length_nm,
     )
 
-    # Lipid packing density — controlled via config.LIPID_PACKING_DENSITY_NM2
+    # Lipid packing density
     lipid_area_nm2 = LIPID_PACKING_DENSITY_NM2
 
     # Total lipids in bilayer (outer + inner leaflet)
     total_lipids = int((surface_area_nm2 / lipid_area_nm2) * 2)
 
-    # Lipid composition fractions — controlled via config.LIPID_FRACTIONS
+    # Lipid composition fractions 
     lipid_fractions = LIPID_FRACTIONS
 
     stoichiometry = {}

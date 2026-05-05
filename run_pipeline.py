@@ -10,6 +10,7 @@ Runs the complete HMPV analysis pipeline in sequence:
   3. Integrate model   — insert VBOF reaction into host GEM → *_with_HMPV_VBOF.xml
   4. Dual-objective    — gene and reaction knockout analysis (host vs virus)
   5. Selective FVA     — flux variability analysis for shortlisted targets
+  6. Generate figures  — publication-quality figures → output/figures/
 
 Single-variant (default)
 ------------------------
@@ -37,7 +38,8 @@ Options
     --critical FLOAT          Max virus growth % for critical targets (default 5)
     --fraction FLOAT          FVA fraction_of_optimum (default 0.9)
     --no-fva                  Skip step 5
-    --no-dual-objective       Skip steps 4 and 5
+    --no-figures              Skip step 6
+    --no-dual-objective       Skip steps 4, 5, and 6
 
 Author: Syed Mushahid Hussain
 """
@@ -166,6 +168,9 @@ from selective_targets_fva import (
     analyze_targets as _run_fva_analysis,
     load_target_tables,
 )
+
+# --- figure generation (root-level script) ---
+from generate_figures import generate_all_figures
 
 # =============================================================================
 # Logging
@@ -673,6 +678,29 @@ def step5_selective_fva(
 
 
 # =============================================================================
+# STEP 6  —  GENERATE FIGURES
+# =============================================================================
+
+def step6_generate_figures(output_dir: Path) -> None:
+    """
+    Generate all publication-quality figures from pipeline outputs.
+
+    Parameters
+    ----------
+    output_dir : Path
+        Variant output directory.  Figures are saved under output_dir/figures/.
+    """
+    logger.info("\n" + "=" * 70)
+    logger.info("STEP 6: GENERATE PUBLICATION FIGURES")
+    logger.info("=" * 70)
+
+    figures = generate_all_figures()
+
+    n_ok = sum(1 for v in figures.values() if v is not None)
+    logger.info("Figures generated: %s/%s", n_ok, len(figures))
+
+
+# =============================================================================
 # SINGLE-VARIANT RUNNER
 # =============================================================================
 
@@ -689,7 +717,7 @@ def _run_one_variant(
     genome_copies: int = 1,
 ) -> dict:
     """
-    Run the complete 5-step pipeline for one virion geometry variant.
+    Run the complete 6-step pipeline for one virion geometry variant.
 
     Parameters
     ----------
@@ -794,6 +822,13 @@ def _run_one_variant(
     if fva_path and fva_path.exists():
         fva_df = pd.read_csv(fva_path)
         summary["n_fva_ok"] = int((fva_df["status"] == "ok").sum())
+
+    if args.no_figures:
+        logger.info("Skipping step 6 (--no-figures).")
+        return summary
+
+    # Step 6 — Generate figures
+    step6_generate_figures(output_dir)
 
     return summary
 
@@ -1137,8 +1172,12 @@ def parse_args() -> argparse.Namespace:
         help="Skip step 5 (selective targets FVA).",
     )
     p.add_argument(
+        "--no-figures", action="store_true",
+        help="Skip step 6 (figure generation).",
+    )
+    p.add_argument(
         "--no-dual-objective", action="store_true",
-        help="Skip steps 4 and 5 (dual-objective analysis and FVA).",
+        help="Skip steps 4, 5, and 6 (dual-objective analysis, FVA, and figures).",
     )
 
     return p.parse_args()

@@ -158,15 +158,15 @@ def count_nucleotides(sequence: str) -> Dict[str, int]:
 def parse_gff_annotations(gff_path: str) -> List[GeneAnnotation]:
     """
     Parse gene annotations from GFF file.
-    
     Parameters:
     -----------
     gff_path : str
         Path to the GFF annotation file
     
+    
     Returns:
     --------
-    list : List of GeneAnnotation objects
+    list : List of Gene Annotation objects
     
     Raises:
     -------
@@ -175,6 +175,7 @@ def parse_gff_annotations(gff_path: str) -> List[GeneAnnotation]:
     filepath = Path(gff_path)
     
     if not filepath.exists():
+ 
         raise MissingGenomeError(f"GFF file not found: {gff_path}", filepath=str(filepath))
     
     logger.info(f"Parsing GFF annotations from: {gff_path}")
@@ -266,8 +267,6 @@ def calculate_genome_stoichiometry(
     """
     nt_counts = genome_info.nucleotide_counts
     
-    # Convert DNA counts to RNA (T -> U)
-    # For (-)ssRNA genome: A in DNA = A in RNA, T in DNA = U in RNA
     rna_counts = {
         'A': nt_counts['A'],
         'U': nt_counts['T'],  # T becomes U in RNA

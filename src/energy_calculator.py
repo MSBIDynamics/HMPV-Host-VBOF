@@ -85,7 +85,8 @@ def calculate_energy_requirements(
     protein_gtp = total_amino_acids * ENERGY_COSTS['elongation_gtp_per_aa']
 
     # Initiation and termination (approximate, per protein molecule)
-    # This is a simplification - actual value depends on number of protein copies
+    # This is a simplification
+    # actual value depends on number of protein copies
     init_term_gtp = num_proteins * (ENERGY_COSTS['initiation_gtp'] + ENERGY_COSTS['termination_gtp'])
 
     # Total energy (glycosylation ATP → ADP + Pi, same bookkeeping as RNA synthesis ATP)

@@ -1,0 +1,78 @@
+
+================================================================================
+HOST MODEL CLEANING REPORT
+================================================================================
+
+Generated: 2026-04-08 06:35:10
+
+ORIGINAL MODEL:
+---------------
+Model ID: iHBEC-BOFVBOF-2023
+Reactions: 2047
+Metabolites: 1442
+Genes: 1390
+Objective: 1.0*VBOF - 1.0*VBOF_reverse_e2af4
+
+Viral Reactions Found:
+  - VBOF
+
+REMOVED SARS-CoV-2 VBOF:
+------------------------
+Reaction ID: VBOF
+Reaction Name: Viral biomass objective function of coronavirus 2019-nCoV
+Bounds: (0.0, 1000.0)
+Number of metabolites: 35
+
+Metabolites in SARS-CoV-2 VBOF:
+  h2o_c: -25.7662927342269
+  atp_c: -26.1786544408123
+  ctp_c: -0.252445933700511
+  gtp_c: -0.252445933700511
+  utp_c: -0.412361706585388
+  ala__L_c: -0.514229365609231
+  arg__L_c: -0.36368443914045
+  asn__L_c: -0.359393636392392
+  asp__L_c: -0.278268562673928
+  cys__L_c: -0.102790292775369
+  glu__L_c: -0.209915852575978
+  gln__L_c: -0.309193467453972
+  gly_c: -0.490974548643072
+  his__L_c: -0.101178462727523
+  ile__L_c: -0.402168271041426
+  leu__L_c: -0.686228305818303
+  lys__L_c: -0.324956053714973
+  met__L_c: -0.10202328399398
+  phe__L_c: -0.298688781969737
+  pro__L_c: -0.280491776533025
+  ser__L_c: -0.496977226062635
+  thr__L_c: -0.447188351688149
+  trp__L_c: -0.120642700063921
+  tyr__L_c: -0.235004820975892
+  val__L_c: -0.317586099772065
+  adp_c: 25.7662927342269
+  h_c: 25.7662927342269
+  pi_c: 25.7662927342269
+  ppi_c: 0.664785408147308
+  pchol_hs_c: 0.0384
+  pe_hs_c: 0.014566
+  pail_hs_c: 0.006621
+  ps_hs_c: 0.001986
+  chsterol_c: 1.2e-05
+  sphmyln_hs_c: 0.001986
+
+CLEANED MODEL:
+--------------
+Model ID: iHBEC-BOFVBOF-2023_CLEAN
+Reactions: 2046
+Metabolites: 1442
+Genes: 1390
+
+Viral Reactions After Cleaning:
+  None - Model is clean!
+
+CHANGES:
+--------
+Reactions removed: 1
+Model ready for HMPV VBOF integration: YES
+
+================================================================================

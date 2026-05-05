@@ -85,7 +85,7 @@
     "normalization_method": "virion_mass_mmol_per_gDCW",
     "normalization_factor": 17790293.0,
     "virion_mass_g": 9.769938242112253e-16,
-    "normalized_at": "2026-04-07T07:19:57.019702"
+    "normalized_at": "2026-04-08T06:52:54.885530"
   },
   "raw_genome_stoichiometry": {
     "atp_c": -5103,

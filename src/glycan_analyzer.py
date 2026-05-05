@@ -11,6 +11,8 @@ Key Functions:
 - get_f_protein_glycans: Calculate F protein N-linked glycans
 - get_g_protein_glycans: Calculate G protein N-linked and O-linked glycans
 
+Author: Syed Mushahid Hussain
+
 =============================================================================
 SOURCES AND REFERENCES:
 =============================================================================
@@ -24,7 +26,7 @@ SOURCES AND REFERENCES:
    Sources:  https://journals.asm.org/doi/10.1128/jvi.01287-06
    
 
-   - sG protein has 3 to 6 potential N-linked glycosylation sites
+   - sG protein has 3 to 6 potential N-linked glycosylation sites and 26 O-linked sites, but utilization is variable and likely incomplete.
     Sources:  https://journals.asm.org/doi/10.1128/jvi.01469-07
     
    - G protein has 5 potential N-linked sites and 59 O-linked sites.

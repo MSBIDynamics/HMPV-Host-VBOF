@@ -35,16 +35,15 @@ OUTPUT_DIR = Path("output_HBEC")  # Output directory for HBEC model
 DEFAULT_GENOME_FILE = "GCF_002815375.1_ASM281537v1_genomic.fna"
 DEFAULT_GFF_FILE = "GCF_002815375.1_ASM281537v1_genomic.gff"
 DEFAULT_PROTEIN_FILE = "GCF_002815375.1_ASM281537v1_protein.faa"
-DEFAULT_HOST_MODEL = "iHBEC_Recon3D_or.xml"  # iHBEC model with R_biomass_hbec, without SARS-CoV-2 VBOF
-DEFAULT_HOST_MODEL_WITH_SARS = "iHBEC_Recon3D_or.xml"  # Original model with both R_biomass_hbec and R_VBOF (SARS-CoV-2)
-DEFAULT_HOST_MODEL_ORIGINAL = "iHsaEC21.xml"  # Original iHsaEC21 model (alternative)
-
+DEFAULT_HOST_MODEL = "model.xml"  # iHBEC model with R_biomass_hbec, without SARS-CoV-2 VBOF
+DEFAULT_HOST_MODEL_WITH_SARS = "iHBEC.xml"  # Original model with both R_biomass_hbec and R_VBOF (SARS-CoV-2)
+MODEL_CLEANING_REPORT_PATH = OUTPUT_DIR / "model_cleaning_report.txt"  # Report for model cleaning process
 
 # =============================================================================
 # HOST BOF REACTION PARAMETERS
 # =============================================================================
 
-HOST_BOF_REACTION_ID = "biomass_reaction"
+HOST_BOF_REACTION_ID = "biomass_hbec"
 HOST_BOF_REACTION_NAME = "Human Bronchial Epithelial Cell Biomass"
 
 # =============================================================================
@@ -108,7 +107,7 @@ PROTEIN_FILE_PATH = PROTEIN_DIR / DEFAULT_PROTEIN_FILE
 HOST_MODEL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL  # Primary model (model_clean.xml)
 HOST_MODEL_CLEAN_PATH = MODEL_DIR / DEFAULT_HOST_MODEL  # Alias for backward compatibility
 HOST_MODEL_WITH_SARS_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_WITH_SARS  # Model with SARS-CoV-2 VBOF
-HOST_MODEL_ORIGINAL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_ORIGINAL
+HOST_MODEL_ORIGINAL_PATH = MODEL_DIR / DEFAULT_HOST_MODEL_WITH_SARS  # Alias for backward compatibility
 
 # VBOF output paths
 VBOF_JSON_PATH = OUTPUT_DIR / VBOF_JSON_FILE
@@ -183,8 +182,7 @@ HMPV_COPY_NUMBERS: Dict[str, int] = {
     'P': 300,     # From Sendai virus https://pdf.sciencedirectassets.com/272412/1-s2.0-S0042682200X01456/1-s2.0-S0042682296903591/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBQaCXVzLWVhc3QtMSJIMEYCIQDeC0gSA%2BKrEkQOz%2Fe5i5O1zhX%2BmWOYJOpN12Q8H8TSLwIhAIak09xe6DgQF1b%2BuWkD7RaQzm4nZ0do29To21W7lRP1KrwFCN3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBRoMMDU5MDAzNTQ2ODY1Igzdim2X5mUUiy2dhRQqkAV%2Bt8KxqrK0cEG7hjD4b9S832%2F5lmjOfM2rA0BIGoezzFN5fuBREV9Oak%2BXweefm3YnHN08NzdCN%2BnjTr3ok2WcIW1uKxefthb%2FTAkPBQlzP%2FI0oLcBB6gyrQti5vNjHKB8yFeEl1Aax%2B3HdiQ6TCPbXAfbGOoJbaPHohNWdk4QL4UL%2BUKHxVte6scEDGesGXGWMi1NAZ8a5NbqVUX8rzAqHbS0MsKrevc%2FrV3qSYzNktwNS8yh7vjSai9CnIIo8sYHspaIm9uf81FrOkwKXOmC4VXGY2ZsgD3kJLalvzsR50Yi4UO%2BmauK14Uh7DwhYexSCiQD9wQT%2FoM1Ir7f3I3egVPzNu5pdNsOuVhgpNe8U0ZKpmU5%2BFTAVaKTId0G22IQeQwlKxP43m6MGW9yDK9ulvNmXI%2BtPco%2FL6m7o4gpf%2Fs5ZVrENaAXeJgVpIqb3CqpTZfmlM45zZKjqzCtwBtjOTCIAeeyUlX9NsKH6XztP85uxu%2BDtTaxa35mHX%2FewjsacDIDyQiYyFc4%2BRk2A8Lbhe2lTIY1Q1%2F5ZqP1pFh92Z70DT3FbGReHdcx%2Bmt5ktyDffYZAJYHaO5isnH%2FodYp%2BXqBQs0MYMVlgYqfLyWGq7OwydD044588NDvqdNq%2FXTEvHupsuqIh9OYAeQRjRt5ialB6Jfh%2BLmwMoxaoE8j%2FL%2BjaPQph0WuRw9Ss9yEQG8gTBwf5lC0NgV4VMUz8JYzVmNw8P1QuPWyuiyJ461pi5sLwvmYg9arOISdASeF0H1KaqvfzUeSNCmUN1Vx5hk7Q1IxQdumoMIoNn09JlhsVjn5GHEgdnMUJ1i0QcDgJ8ToeVoVS0RA4Xr2JTcDAXILGQu8sb0x9j0OIjXWU9ZoCjDb9tHOBjqwAYTbJnhfYeKmdbpd%2Biy7lgYJ2kV1adTUangv1EmPBhpGxt%2B434z3199lYF7SJSpFgPcOVd13DLxdT1ernanWhduGaxNa7Lp5UW%2FPwQ0yAq6HIZjQAfwW6pcaqMo%2BcRa1%2FmEX4AZ8Q1tVgXaHLflG0HHuUHfQhFWiOC23XtkmoJDOjG%2FdkgSfKENDkuFLKjIpNOlLX8jjh3R4cUcKjlrITRfgRUE%2BRzmCRgD0%2FKGsawVa&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260407T043126Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4UGMCXQD%2F20260407%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c2c0c9b59f16ef8b99e3205f30b4bb3114277a830d5792c6688fd973c334c079&hash=3162b9416debf0885161b80ce2594b9e38b16532a925dc56873a48762f376c79&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0042682296903591&tid=spdf-ecce83ef-2907-4a0c-b173-b1d973d19482&sid=3ad2fd778f23b3454f5bee5514227e4ec730gxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=04015f0a5a57560150&rr=9e864d7a29a2290f&cc=de
     'L': 50,      # From Sendai virus
     
-   
-    'M': 180,    # Matrix protein - virion structure
+    'M': 1840,    # Matrix protein - virion structure
     
     # Surface glycoproteins (embedded in envelope)
    

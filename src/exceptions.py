@@ -27,7 +27,6 @@ class HMPVModelError(Exception):
 class MissingGenomeError(HMPVModelError):
     """
     Raised when genome data is missing or invalid.
-    
     Examples:
         - Genome file not found
         - Invalid FASTA format
@@ -42,7 +41,6 @@ class MissingGenomeError(HMPVModelError):
 class MissingProteinDataError(HMPVModelError):
     """
     Raised when protein data is incomplete or missing.
-    
     Examples:
         - Protein file not found
         - Missing protein sequences
