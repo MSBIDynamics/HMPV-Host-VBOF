@@ -773,8 +773,9 @@ This project follows strict coding standards:
 ---
 
 ## License
+MIT License
 
-Copyright (c) 2025 Syed Mushahid Hussain and MSBI Dynamics - Justus-Liebig-Universität Gießen . All rights reserved.
+Copyright (c) 2025-2026 Syed Mushahid Hussain and MSBIDynamics - Justus Liebig University Giessen.
 <!--
 1. License Grant
    This source code and associated data are provided solely for **personal review or educational purposes**.
